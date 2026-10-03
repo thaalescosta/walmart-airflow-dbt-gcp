@@ -5,8 +5,8 @@ build/
 dist/
 wheels/
 *.egg-info
-include/gcp
-include/walmart_dataset
+*/gcp
+*/walmart_dataset
 
 # Virtual environments
 .venv
