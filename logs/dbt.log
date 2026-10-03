@@ -1,0 +1,173 @@
+[0m14:37:13.322057 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F1A5EA1E80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F1A8226B70>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F1A8227FB0>]}
+
+
+============================== 14:37:13.452676 | febfa064-c112-4110-9108-efbc88f1e4b8 ==============================
+[0m14:37:13.452676 [info ] [MainThread]: Running with dbt=1.12.5
+[0m14:37:13.453362 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'maximum_seed_size_mib': '1', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': 'C:\\Users\\ThalesCosta\\.dbt', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'use_colors': 'True', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'invocation_command': 'dbt init', 'log_path': 'logs'}
+[0m14:38:21.389276 [debug] [MainThread]: Starter project path: C:\Projects\walmart-airflow-dbt-gcp\.venv\Lib\site-packages\dbt\include\starter_project
+[0m14:38:21.421402 [info ] [MainThread]: Setting up your profile.
+[0m14:38:29.659845 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m14:38:29.660561 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m14:38:29.660561 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m14:41:04.720480 [info ] [MainThread]: Profile walmart written to C:\Users\ThalesCosta\.dbt\profiles.yml using target's profile_template.yml and your supplied values.
+[0m14:41:04.752999 [info ] [MainThread]: Running dbt debug to validate the project...
+[0m14:41:04.754534 [info ] [MainThread]: dbt version: 1.12.5
+[0m14:41:04.754534 [info ] [MainThread]: python version: 3.12.14
+[0m14:41:04.755545 [info ] [MainThread]: python path: C:\Projects\walmart-airflow-dbt-gcp\.venv\Scripts\python.exe
+[0m14:41:04.755545 [info ] [MainThread]: os info: Windows-11-10.0.26300-SP0
+[0m14:41:04.813647 [info ] [MainThread]: Using profiles dir at C:\Users\ThalesCosta\.dbt
+[0m14:41:04.814652 [info ] [MainThread]: Using profiles.yml file at C:\Users\ThalesCosta\.dbt\profiles.yml
+[0m14:41:04.814652 [info ] [MainThread]: Using dbt_project.yml file at C:\Projects\walmart-airflow-dbt-gcp\walmart\dbt_project.yml
+[0m14:41:04.814652 [info ] [MainThread]: adapter type: databricks
+[0m14:41:04.815840 [info ] [MainThread]: adapter version: 1.12.6
+[0m14:41:04.905615 [info ] [MainThread]: Configuration:
+[0m14:41:04.906616 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m14:41:04.906616 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m14:41:04.907613 [info ] [MainThread]: Required dependencies:
+[0m14:41:04.907613 [debug] [MainThread]: Executing "git --help"
+[0m14:41:04.938001 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone      Clone a repository into a new directory\n   init       Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add        Add file contents to the index\n   mv         Move or rename a file, a directory, or a symlink\n   restore    Restore working tree files\n   rm         Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect     Use binary search to find the commit that introduced a bug\n   diff       Show changes between commits, commit and working tree, etc\n   grep       Print lines matching a pattern\n   log        Show commit logs\n   show       Show various types of objects\n   status     Show the working tree status\n\ngrow, mark and tweak your common history\n   backfill   Download missing objects in a partial clone\n   branch     List, create, or delete branches\n   commit     Record changes to the repository\n   history    EXPERIMENTAL: Rewrite history\n   merge      Join two or more development histories together\n   rebase     Reapply commits on top of another base tip\n   reset      Set `HEAD` or the index to a known state\n   switch     Switch branches\n   tag        Create, list, delete or verify tags\n\ncollaborate (see also: git help workflows)\n   fetch      Download objects and refs from another repository\n   pull       Fetch from and integrate with another repository or a local branch\n   push       Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m14:41:04.938001 [debug] [MainThread]: STDERR: "b''"
+[0m14:41:04.939753 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m14:41:04.940312 [info ] [MainThread]: Connection:
+[0m14:41:04.940312 [info ] [MainThread]:   host: dbc-7417382b-1a8c.cloud.databricks.com
+[0m14:41:04.940874 [info ] [MainThread]:   http_path: /sql/1.0/warehouses/1d32ca3d455d9fe8
+[0m14:41:04.941425 [info ] [MainThread]:   catalog: walmart
+[0m14:41:04.941425 [info ] [MainThread]:   schema: dbt_schema
+[0m14:41:04.941985 [info ] [MainThread]: Registered adapter: databricks=1.12.6
+[0m14:41:05.334959 [debug] [MainThread]: Databricks adapter: DatabricksDBTConnection(session-id=None, name=debug) - Creating connection
+[0m14:41:05.334959 [debug] [MainThread]: Acquiring new databricks connection 'debug'
+[0m14:41:06.074895 [info ] [MainThread]: Databricks adapter:   SPOG host (host_type='workspace'): no
+[0m14:41:06.075413 [info ] [MainThread]: Databricks adapter:   workspace_id (from ?o= in http_path): None
+[0m14:41:06.075413 [info ] [MainThread]: Databricks adapter:   databricks-sql-connector version: 4.4.0 (supported)
+[0m14:41:06.075413 [info ] [MainThread]: Databricks adapter:   databricks-sdk version: 0.117.0 (supported)
+[0m14:41:06.076919 [debug] [MainThread]: Using databricks connection "debug"
+[0m14:41:06.076919 [debug] [MainThread]: On debug: select 1 as id
+[0m14:41:06.076919 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m14:41:07.388942 [error] [MainThread]: databricks-sql-connector adapter: ThriftBackend.attempt_request: Exception: 
+[0m14:41:07.405818 [error] [MainThread]: Databricks adapter: Connection(session-id=Unknown) - Exception while trying to create connection: Error during request to server: : Invalid access token.. 
+Error properties: attempt=1/30, bounded-retry-delay=None, elapsed-seconds=0.6601653099060059/900.0, error-message=: Invalid access token., http-code=403, method=OpenSession, no-retry-reason=non-retryable error, original-exception=, query-id=None, session-id=None
+[0m14:41:07.406829 [debug] [MainThread]: Databricks adapter: Exception while trying to execute query
+select 1 as id
+: Database Error
+  Error during request to server: : Invalid access token.. 
+[0m14:41:07.407829 [debug] [MainThread]: On debug: No close available on handle
+[0m14:41:07.407829 [info ] [MainThread]:   Connection test: [[31mERROR[0m]
+
+[0m14:41:07.407829 [info ] [MainThread]: [31m1 check failed:[0m
+[0m14:41:07.408830 [info ] [MainThread]: dbt was unable to connect to the specified database.
+The database returned the following error:
+
+  >Database Error
+  Database Error
+    Error during request to server: : Invalid access token.. 
+
+Check your database credentials and try again. For more information, visit:
+https://docs.getdbt.com/docs/configure-your-profile
+
+
+[0m14:41:07.408830 [info ] [MainThread]: Your new dbt project "walmart" was created!
+Initialized new project in C:\Projects\walmart-airflow-dbt-gcp\walmart\walmart
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m14:41:07.410338 [info ] [MainThread]: [31mYour profile may need adjustments. You can find the logs of `dbt debug` above[0m
+[0m14:41:07.411350 [debug] [MainThread]: Command `dbt init` succeeded at 14:41:07.411350 after 234.31 seconds
+[0m14:41:07.411350 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F1A8B22810>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F1A8496030>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F1AE5705F0>]}
+[0m14:41:07.412795 [debug] [MainThread]: Flushing usage events
+[0m14:41:07.956900 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m14:42:14.701219 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001819B8AC650>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001819BFE55B0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001819C43C2C0>]}
+
+
+============================== 14:42:14.704522 | 0a61094d-54f2-4e96-89aa-5cb192362993 ==============================
+[0m14:42:14.704522 [info ] [MainThread]: Running with dbt=1.12.5
+[0m14:42:14.705542 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'version_check': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'static_parser': 'True', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': 'C:\\Users\\ThalesCosta\\.dbt', 'use_colors': 'True', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'invocation_command': 'dbt debug', 'log_path': 'logs'}
+[0m14:42:14.725320 [info ] [MainThread]: dbt version: 1.12.5
+[0m14:42:14.725320 [info ] [MainThread]: python version: 3.12.14
+[0m14:42:14.726320 [info ] [MainThread]: python path: C:\Projects\walmart-airflow-dbt-gcp\.venv\Scripts\python.exe
+[0m14:42:14.726320 [info ] [MainThread]: os info: Windows-11-10.0.26300-SP0
+[0m14:42:14.734357 [info ] [MainThread]: Error importing adapter: No module named 'dbt.adapters.snowflake'
+[0m14:42:15.736840 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m14:42:15.736840 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m14:42:15.736840 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m14:42:16.472330 [info ] [MainThread]: Using profiles dir at C:\Users\ThalesCosta\.dbt
+[0m14:42:16.473331 [info ] [MainThread]: Using profiles.yml file at C:\Users\ThalesCosta\.dbt\profiles.yml
+[0m14:42:16.473331 [info ] [MainThread]: Using dbt_project.yml file at C:\Projects\walmart-airflow-dbt-gcp\dbt_project.yml
+[0m14:42:16.474486 [info ] [MainThread]: Configuration:
+[0m14:42:16.474486 [info ] [MainThread]:   profiles.yml file [[31mERROR invalid[0m]
+[0m14:42:16.475499 [info ] [MainThread]:   dbt_project.yml file [[31mERROR not found[0m]
+[0m14:42:16.475499 [info ] [MainThread]: Required dependencies:
+[0m14:42:16.476498 [debug] [MainThread]: Executing "git --help"
+[0m14:42:16.510225 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone      Clone a repository into a new directory\n   init       Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add        Add file contents to the index\n   mv         Move or rename a file, a directory, or a symlink\n   restore    Restore working tree files\n   rm         Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect     Use binary search to find the commit that introduced a bug\n   diff       Show changes between commits, commit and working tree, etc\n   grep       Print lines matching a pattern\n   log        Show commit logs\n   show       Show various types of objects\n   status     Show the working tree status\n\ngrow, mark and tweak your common history\n   backfill   Download missing objects in a partial clone\n   branch     List, create, or delete branches\n   commit     Record changes to the repository\n   history    EXPERIMENTAL: Rewrite history\n   merge      Join two or more development histories together\n   rebase     Reapply commits on top of another base tip\n   reset      Set `HEAD` or the index to a known state\n   switch     Switch branches\n   tag        Create, list, delete or verify tags\n\ncollaborate (see also: git help workflows)\n   fetch      Download objects and refs from another repository\n   pull       Fetch from and integrate with another repository or a local branch\n   push       Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m14:42:16.510225 [debug] [MainThread]: STDERR: "b''"
+[0m14:42:16.511226 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m14:42:16.511226 [info ] [MainThread]: Connection test skipped since no profile was found
+[0m14:42:16.512226 [info ] [MainThread]: [31m2 checks failed:[0m
+[0m14:42:16.512226 [info ] [MainThread]: Could not load dbt_project.yml
+Profile loading failed for the following reason:
+Runtime Error
+  Credentials in profile "dbt_tutorial", target "dev" invalid: Runtime Error
+    Could not find adapter type snowflake!
+
+
+[0m14:42:16.513225 [info ] [MainThread]: Project loading failed for the following reason:
+ project path <C:\Projects\walmart-airflow-dbt-gcp\dbt_project.yml> not found
+
+[0m14:42:16.514464 [debug] [MainThread]: Command `dbt debug` failed at 14:42:16.513225 after 2.01 seconds
+[0m14:42:16.514464 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000181C1A90440>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000181C19B8A40>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000181BF8F0770>]}
+[0m14:42:16.514464 [debug] [MainThread]: Flushing usage events
+[0m14:42:17.121666 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m14:43:35.401558 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DE2AF01190>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DE2AF03C80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DE2AF000B0>]}
+
+
+============================== 14:43:35.405739 | e63e1653-9ad3-4982-8fde-56e00b189a83 ==============================
+[0m14:43:35.405739 [info ] [MainThread]: Running with dbt=1.12.5
+[0m14:43:35.406738 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'maximum_seed_size_mib': '1', 'target_path': 'None', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': 'C:\\Users\\ThalesCosta\\.dbt', 'use_colors': 'True', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'invocation_command': 'dbt debug', 'log_path': 'logs'}
+[0m14:43:35.427455 [info ] [MainThread]: dbt version: 1.12.5
+[0m14:43:35.428454 [info ] [MainThread]: python version: 3.12.14
+[0m14:43:35.428454 [info ] [MainThread]: python path: C:\Projects\walmart-airflow-dbt-gcp\.venv\Scripts\python.exe
+[0m14:43:35.429455 [info ] [MainThread]: os info: Windows-11-10.0.26300-SP0
+[0m14:43:35.436496 [info ] [MainThread]: Error importing adapter: No module named 'dbt.adapters.snowflake'
+[0m14:43:36.459361 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m14:43:36.460438 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m14:43:36.460438 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m14:43:37.202186 [info ] [MainThread]: Using profiles dir at C:\Users\ThalesCosta\.dbt
+[0m14:43:37.203696 [info ] [MainThread]: Using profiles.yml file at C:\Users\ThalesCosta\.dbt\profiles.yml
+[0m14:43:37.203696 [info ] [MainThread]: Using dbt_project.yml file at C:\Projects\walmart-airflow-dbt-gcp\dbt_project.yml
+[0m14:43:37.204713 [info ] [MainThread]: Configuration:
+[0m14:43:37.204713 [info ] [MainThread]:   profiles.yml file [[31mERROR invalid[0m]
+[0m14:43:37.205713 [info ] [MainThread]:   dbt_project.yml file [[31mERROR not found[0m]
+[0m14:43:37.205713 [info ] [MainThread]: Required dependencies:
+[0m14:43:37.205713 [debug] [MainThread]: Executing "git --help"
+[0m14:43:37.242450 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone      Clone a repository into a new directory\n   init       Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add        Add file contents to the index\n   mv         Move or rename a file, a directory, or a symlink\n   restore    Restore working tree files\n   rm         Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect     Use binary search to find the commit that introduced a bug\n   diff       Show changes between commits, commit and working tree, etc\n   grep       Print lines matching a pattern\n   log        Show commit logs\n   show       Show various types of objects\n   status     Show the working tree status\n\ngrow, mark and tweak your common history\n   backfill   Download missing objects in a partial clone\n   branch     List, create, or delete branches\n   commit     Record changes to the repository\n   history    EXPERIMENTAL: Rewrite history\n   merge      Join two or more development histories together\n   rebase     Reapply commits on top of another base tip\n   reset      Set `HEAD` or the index to a known state\n   switch     Switch branches\n   tag        Create, list, delete or verify tags\n\ncollaborate (see also: git help workflows)\n   fetch      Download objects and refs from another repository\n   pull       Fetch from and integrate with another repository or a local branch\n   push       Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m14:43:37.242450 [debug] [MainThread]: STDERR: "b''"
+[0m14:43:37.242450 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m14:43:37.243448 [info ] [MainThread]: Connection test skipped since no profile was found
+[0m14:43:37.243448 [info ] [MainThread]: [31m2 checks failed:[0m
+[0m14:43:37.244447 [info ] [MainThread]: Could not load dbt_project.yml
+Profile loading failed for the following reason:
+Runtime Error
+  Credentials in profile "dbt_tutorial", target "dev" invalid: Runtime Error
+    Could not find adapter type snowflake!
+
+
+[0m14:43:37.244447 [info ] [MainThread]: Project loading failed for the following reason:
+ project path <C:\Projects\walmart-airflow-dbt-gcp\dbt_project.yml> not found
+
+[0m14:43:37.245446 [debug] [MainThread]: Command `dbt debug` failed at 14:43:37.245446 after 2.00 seconds
+[0m14:43:37.245446 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DE4E7B2DB0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DE4CBF15B0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001DE2DED6690>]}
+[0m14:43:37.246445 [debug] [MainThread]: Flushing usage events
+[0m14:43:37.839868 [debug] [MainThread]: An error was encountered while trying to flush usage events

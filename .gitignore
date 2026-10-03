@@ -5,8 +5,12 @@ build/
 dist/
 wheels/
 *.egg-info
-*/gcp
-*/walmart_dataset
+# Secrets — never commit
+walmart/profiles.yml
+include/gcp/service_account.json
+include/gcp/*service*account*.json
+**/service_account.json
+**/profiles.yml
 
 # Virtual environments
 .venv
