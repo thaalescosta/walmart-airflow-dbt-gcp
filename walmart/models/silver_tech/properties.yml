@@ -1,0 +1,60 @@
+version: 2
+
+models:
+    - name: products_tech
+      columns:
+        - name: product_id
+          data_tests:
+            - not_null
+            - unique
+        - name: price
+          data_tests:
+            - dbt_utils.expression_is_true:
+                arguments:
+                    expression: "> 0"
+                config:
+                    error_if: "> 0"     # This is based on the amount of rows that fail the test.
+                    warning_if: "> 0"   # If the number of rows that fail the test is greater than 0, then the test will fail.
+        
+    - name: customers_tech
+      columns:
+        - name: customer_id
+          data_tests:
+            - not_null
+            - unique
+
+    - name: employee_tech
+      columns:
+        - name: employee_id
+          data_tests:
+            - not_null
+            - unique
+
+    - name: order_items_tech
+      columns:
+        - name: order_item_id
+          data_tests:
+            - not_null
+            - unique
+
+    - name: orders_tech
+      columns:
+        - name: order_id
+          data_tests:
+            - not_null
+            - unique
+
+    - name: products_tech
+      columns:
+        - name: product_id
+          data_tests:
+            - not_null
+            - unique
+
+    - name: stores_tech
+      columns:
+        - name: store_id
+          data_tests:
+            - not_null
+            - unique
+
