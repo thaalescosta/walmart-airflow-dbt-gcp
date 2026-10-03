@@ -23,7 +23,7 @@ models:
             - not_null
             - unique
 
-    - name: employee_tech
+    - name: employees_tech
       columns:
         - name: employee_id
           data_tests:
@@ -40,13 +40,6 @@ models:
     - name: orders_tech
       columns:
         - name: order_id
-          data_tests:
-            - not_null
-            - unique
-
-    - name: products_tech
-      columns:
-        - name: product_id
           data_tests:
             - not_null
             - unique

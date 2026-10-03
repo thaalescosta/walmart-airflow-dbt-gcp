@@ -26,3 +26,6 @@ models:
     silver_tech:
       +materialized: incremental
       +schema: silver_tech
+    silver_biz:
+      +materialized: view
+      +schema: silver_biz
