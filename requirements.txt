@@ -1,0 +1,4 @@
+# Astro Runtime includes the following pre-installed providers packages: https://www.astronomer.io/docs/astro/runtime-image-architecture#provider-packages
+google-cloud-storage>=2.10.0
+dbt-core
+dbt-databricks
