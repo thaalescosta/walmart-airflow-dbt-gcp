@@ -1,6 +1,6 @@
 {{
     config(
-        unique_key='order_item_id',
+        unique_key='order_item_id'
     )
 }}
 

@@ -1,6 +1,6 @@
 {{
     config(
-        unique_key='store_id',
+        unique_key='store_id'
     )
 }}
 

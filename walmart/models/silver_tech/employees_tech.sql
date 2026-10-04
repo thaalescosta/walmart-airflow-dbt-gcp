@@ -1,6 +1,6 @@
 {{
     config(
-        unique_key='employee_id',
+        unique_key='employee_id'
     )
 }}
 

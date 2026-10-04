@@ -1,6 +1,6 @@
 {{
     config(
-        unique_key='customer_id',
+        unique_key='customer_id'
     )
 }}
 
