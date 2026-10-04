@@ -7,6 +7,6 @@ SELECT
     store_created_timestamp,
     store_updated_timestamp,
     store_is_active,
-    store_processed_at
+    store_processed_at,
     current_timestamp() AS stores_gold_processed_at
 FROM {{ ref("obt_biz") }}

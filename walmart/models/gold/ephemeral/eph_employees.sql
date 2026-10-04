@@ -9,6 +9,6 @@ SELECT
     employee_created_timestamp,
     employee_updated_timestamp,
     employee_is_active,
-    employee_processed_at
+    employee_processed_at,
     current_timestamp() AS employees_gold_processed_at
 FROM {{ ref("obt_biz") }}

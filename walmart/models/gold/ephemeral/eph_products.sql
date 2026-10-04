@@ -2,7 +2,7 @@ SELECT
     DISTINCT product_id,
     product_name,
     category,
-    brand
+    brand,
     price,
     product_created_timestamp,
     product_updated_timestamp,
