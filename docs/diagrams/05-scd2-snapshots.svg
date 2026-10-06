@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 668" width="1200" height="668" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">SCD2 snapshots: how the gold dimensions keep history</title>
+  <desc id="dsc">Animated diagram of a dbt timestamp snapshot: when a customer attribute changes, the open version row is closed by setting dbt_valid_to, and a new version row is inserted with dbt_valid_from set to the change. The result is a slowly changing dimension type 2 table with one open row per key.</desc>
+
+  <style>
+    svg {
+      --ink:#0f172a; --mut:#64748b; --faint:#94a3b8;
+      --line:#cbd5e1; --card:#ffffff; --soft:#f8fafc;
+      --v1:#0369a1; --v1-bg:#f0f9ff; --v1-ln:#0ea5e9;
+      --v2:#15803d; --v2-bg:#f0fdf4; --v2-ln:#22c55e;
+      --snap:#a16207; --gold-ln:#eab308;
+      --warn:#b45309; --warn-bg:#fffbeb; --warn-ln:#f59e0b;
+      --dbt:#c2410c;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink:#e2e8f0; --mut:#94a3b8; --faint:#64748b;
+        --line:#334155; --card:#0f172a; --soft:#111c2e;
+        --v1:#7dd3fc; --v1-bg:#0a1a26; --v1-ln:#0369a1;
+        --v2:#4ade80; --v2-bg:#04140a; --v2-ln:#15803d;
+        --snap:#facc15; --gold-ln:#a16207;
+        --warn:#fbbf24; --warn-bg:#1c1408; --warn-ln:#b45309;
+        --dbt:#fdba74;
+      }
+    }
+    text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .ttl { font-size: 24px; font-weight: 700; fill: var(--ink); }
+    .sub { font-size: 13px; fill: var(--mut); }
+    .kick { font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; fill: var(--mut); }
+    .h2 { font-size: 15px; font-weight: 700; fill: var(--ink); }
+    .h3 { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+    .body { font-size: 11.5px; fill: var(--mut); }
+    .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; fill: var(--mut); }
+    .mb { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; font-weight: 700; fill: var(--ink); }
+    .th { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9.5px; font-weight: 700; fill: var(--faint); letter-spacing:.3px; }
+    @keyframes grow { 0% { width: 0 } 100% { width: 603 } }
+    .grow { animation: grow 3.4s cubic-bezier(.5,0,.2,1) infinite; }
+    @keyframes grow1 { 0% { width: 0 } 40%,100% { width: 297 } }
+    .grow1 { animation: grow1 3.4s cubic-bezier(.5,0,.2,1) infinite; }
+    @keyframes sweep { 0% { transform: translateX(0) } 50% { transform: translateX(1080px) } 100% { transform: translateX(0) } }
+    .sweep { animation: sweep 5s linear infinite; }
+    @keyframes blink { 0%,100% { opacity:.45 } 50% { opacity:1 } }
+    .blink { animation: blink 2.4s ease-in-out infinite; }
+  </style>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <text class="ttl" x="20" y="40">The gold dimensions are slowly changing, type 2</text>
+  <text class="sub" x="20" y="62">All five dimensions use the same <tspan font-family="ui-monospace,Menlo,monospace">timestamp</tspan> strategy, so a changed attribute closes the old row instead of overwriting it.</text>
+
+  <!-- ============ PANEL 1 : source change ============ -->
+  <g transform="translate(20,96)">
+    <rect x="0" y="0" width="360" height="196" rx="12" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="0" y="0" width="360" height="4" rx="2" fill="var(--line)"/>
+    <text class="kick" x="16" y="26">SOURCE · customer_id 42</text>
+    <g transform="translate(16,42)">
+      <text class="th" x="0" y="0">VERSION</text>
+      <text class="th" x="86" y="0">CITY</text>
+      <text class="th" x="196" y="0">UPDATED_AT</text>
+      <line x1="0" y1="10" x2="328" y2="10" stroke="var(--line)"/>
+      <rect x="-8" y="20" width="344" height="26" rx="6" fill="var(--v1-bg)"/>
+      <text class="mb" x="0" y="38">before</text><text class="m" x="86" y="38">Toronto</text><text class="m" x="196" y="38">2026-03-01 08:00</text>
+      <rect x="-8" y="56" width="344" height="26" rx="6" fill="var(--v2-bg)"/>
+      <text class="mb" x="0" y="74">after</text><text class="m" x="86" y="74">Ottawa</text><text class="m" x="196" y="74">2026-06-10 14:30</text>
+      <text class="m" x="0" y="106" fill="var(--warn)">a CDC run rewrites the same row in</text>
+      <text class="m" x="0" y="120" fill="var(--warn)">bronze; nothing is deleted</text>
+    </g>
+  </g>
+
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)"><path d="M386 194 H 418"/></g>
+  <circle cx="386" cy="194" r="3.5" fill="var(--line)"><animate attributeName="cx" values="388;416" dur="1.4s" repeatCount="indefinite"/></circle>
+
+  <!-- ============ PANEL 2 : comparison ============ -->
+  <g transform="translate(424,96)">
+    <rect x="0" y="0" width="360" height="196" rx="12" fill="var(--card)" stroke="var(--gold-ln)"/>
+    <rect x="0" y="0" width="360" height="4" rx="2" fill="var(--gold-ln)"/>
+    <text class="kick" x="16" y="26" fill="var(--snap)">TIMESTAMP STRATEGY</text>
+    <g transform="translate(16,42)">
+      <text class="m" x="0" y="0" fill="var(--ink)">unique_key   = customer_id</text>
+      <text class="m" x="0" y="20" fill="var(--ink)">updated_at   = customer_updated_timestamp</text>
+      <text class="m" x="0" y="40" fill="var(--ink)">dbt_valid_to_current = 9999-12-31</text>
+      <line x1="0" y1="54" x2="328" y2="54" stroke="var(--line)"/>
+      <text class="m" x="0" y="76">14:30 is newer than the stored 08:00,</text>
+      <text class="m" x="0" y="92">so this key counts as changed</text>
+      <text class="m" x="0" y="116" fill="var(--dbt)">compare &gt; means equal timestamps</text>
+      <text class="m" x="0" y="130" fill="var(--dbt)">never create a version</text>
+    </g>
+  </g>
+
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)"><path d="M790 194 H 822"/></g>
+  <circle cx="790" cy="194" r="3.5" fill="var(--gold-ln)"><animate attributeName="cx" values="792;820" dur="1.4s" begin="0.6s" repeatCount="indefinite"/></circle>
+
+  <!-- ============ PANEL 3 : result ============ -->
+  <g transform="translate(828,96)">
+    <rect x="0" y="0" width="352" height="196" rx="12" fill="var(--card)" stroke="#FF6947"/>
+    <rect x="0" y="0" width="352" height="4" rx="2" fill="#FF6947"/>
+    <text class="kick" x="16" y="26" fill="var(--dbt)">dim_customers RESULT</text>
+    <g transform="translate(16,42)">
+      <text class="th" x="0" y="0">VALID_FROM</text>
+      <text class="th" x="112" y="0">VALID_TO</text>
+      <text class="th" x="228" y="0">SCD_TYPE</text>
+      <line x1="0" y1="10" x2="320" y2="10" stroke="var(--line)"/>
+      <rect x="-8" y="20" width="336" height="52" rx="6" fill="var(--v1-bg)"/>
+      <text class="m" x="0" y="40">2026-03-01</text>
+      <text class="mb" x="112" y="40" fill="var(--v1)">2026-06-10</text>
+      <text class="m" x="228" y="40">upsert</text>
+      <text class="m" x="0" y="60" fill="var(--mut)">city Toronto</text>
+      <text class="m" x="112" y="60" fill="var(--faint)">closed</text>
+      <rect x="-8" y="78" width="336" height="52" rx="6" fill="var(--v2-bg)"/>
+      <text class="mb" x="0" y="98" fill="var(--v2)">2026-06-10</text>
+      <text class="m" x="112" y="98">9999-12-31</text>
+      <text class="m" x="228" y="98">snapshot</text>
+      <text class="m" x="0" y="118" fill="var(--mut)">city Ottawa</text>
+      <text class="m" x="112" y="118" fill="var(--v2)">open</text>
+    </g>
+  </g>
+
+  <!-- ============ TIMELINE ============ -->
+  <g transform="translate(20,318)">
+    <text class="kick" x="0" y="14">VALIDITY TIMELINE FOR CUSTOMER_ID 42</text>
+    <!-- axis -->
+    <line x1="40" y1="52" x2="1120" y2="52" stroke="var(--line)" stroke-width="1.5"/>
+    <g class="th" text-anchor="middle">
+      <text x="40" y="44">JAN</text><text x="130" y="44">FEB</text><text x="220" y="44">MAR</text><text x="310" y="44">APR</text>
+      <text x="400" y="44">MAY</text><text x="490" y="44">JUN</text><text x="580" y="44">JUL</text><text x="670" y="44">AUG</text>
+      <text x="760" y="44">SEP</text><text x="850" y="44">OCT</text><text x="940" y="44">NOV</text><text x="1030" y="44">DEC</text><text x="1120" y="44">NOW</text>
+    </g>
+    <!-- version 1 bar: Mar 1 (x=220) to Jun 10 (x=517) -->
+    <rect x="220" y="62" width="297" height="26" rx="6" fill="var(--v1-bg)" stroke="var(--v1-ln)"/>
+    <rect class="grow1" x="220" y="62" width="0" height="26" rx="6" fill="var(--v1-ln)" opacity="0.35"/>
+    <text class="mb" x="368" y="79" text-anchor="middle" fill="var(--v1)">version 1 · Toronto · 3 months</text>
+    <!-- version 2 bar -->
+    <rect x="517" y="98" width="603" height="26" rx="6" fill="var(--v2-bg)" stroke="var(--v2-ln)"/>
+    <rect class="grow" x="517" y="98" width="0" height="26" rx="6" fill="var(--v2-ln)" opacity="0.35"/>
+    <text class="mb" x="818" y="115" text-anchor="middle" fill="var(--v2)">version 2 · Ottawa · open, valid_to is the sentinel</text>
+    <!-- close marker -->
+    <line x1="517" y1="54" x2="517" y2="132" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text class="th" x="523" y="140" fill="var(--warn)">change detected here</text>
+    <!-- travelling marker -->
+    <circle r="4" fill="var(--warn)" class="sweep"/>
+    <!-- labels -->
+    <text class="m" x="220" y="156" text-anchor="middle">valid_from</text>
+    <text class="m" x="517" y="156" text-anchor="middle" fill="var(--warn)">dbt_valid_to</text>
+  </g>
+
+  <!-- ============ NOTES ============ -->
+  <g transform="translate(20,486)">
+    <rect x="0" y="0" width="1160" height="166" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="26">Snapshot configuration, and the catch</text>
+
+    <text class="body" x="18" y="52">All five snapshots declare <tspan font-family="ui-monospace,Menlo,monospace">relation: ref('eph_...')</tspan> instead of <tspan font-family="ui-monospace,Menlo,monospace">sql:</tspan>. That is the</text>
+    <text class="body" x="18" y="70">supported way to snapshot an existing model, and it is the only reason the ephemeral</text>
+    <text class="body" x="18" y="88">layer exists at all: those models are snapshot input, never a table of their own.</text>
+
+    <text class="body" x="18" y="114"><tspan font-family="ui-monospace,Menlo,monospace">dbt_valid_to_current: to_date('9999-12-31')</tspan> replaces the usual NULL on open</text>
+    <text class="body" x="18" y="132">rows. A non null sentinel keeps BI date filters simple, at the cost of a Databricks</text>
+    <text class="body" x="18" y="150">specific expression that will not port to another warehouse unchanged.</text>
+
+    <text class="body" x="600" y="52" fill="var(--warn)">The timestamp strategy can only detect a change when updated_timestamp actually moves.</text>
+    <text class="body" x="600" y="70" fill="var(--warn)">A CDC write that changes an attribute but leaves that timestamp untouched produces</text>
+    <text class="body" x="600" y="88" fill="var(--warn)">no new version, and gold keeps serving the stale attribute value.</text>
+
+    <text class="body" x="600" y="114">Because the comparison is strictly greater than, a rewrite that lands on the exact</text>
+    <text class="body" x="600" y="132">same timestamp counts as no change, which is the classic silent CDC failure. A check</text>
+    <text class="body" x="600" y="150">strategy would compare row contents instead, at a higher compute cost per run.</text>
+  </g>
+</svg>

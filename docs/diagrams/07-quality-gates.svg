@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 722" width="1200" height="722" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Every quality gate in the pipeline</title>
+  <desc id="dsc">Table style diagram listing all five data quality checks in the project, what each one asserts, the file that defines it and its severity, with notes on the two that are not doing what they appear to do.</desc>
+
+  <style>
+    svg {
+      --ink:#0f172a; --mut:#64748b; --faint:#94a3b8;
+      --line:#cbd5e1; --card:#ffffff; --soft:#f8fafc;
+      --err:#b91c1c; --err-bg:#fef2f2; --err-ln:#ef4444;
+      --warn:#b45309; --warn-bg:#fffbeb; --warn-ln:#f59e0b;
+      --ok:#15803d; --ok-bg:#f0fdf4; --ok-ln:#22c55e;
+      --dbt:#c2410c;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink:#e2e8f0; --mut:#94a3b8; --faint:#64748b;
+        --line:#334155; --card:#0f172a; --soft:#111c2e;
+        --err:#f87171; --err-bg:#1c0a0a; --err-ln:#b91c1c;
+        --warn:#fbbf24; --warn-bg:#1c1408; --warn-ln:#b45309;
+        --ok:#4ade80; --ok-bg:#04140a; --ok-ln:#15803d;
+        --dbt:#fdba74;
+      }
+    }
+    text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .ttl { font-size: 24px; font-weight: 700; fill: var(--ink); }
+    .sub { font-size: 13px; fill: var(--mut); }
+    .kick { font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; fill: var(--mut); }
+    .h3 { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+    .body { font-size: 11.5px; fill: var(--mut); }
+    .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; fill: var(--mut); }
+    .mb { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; font-weight: 700; fill: var(--ink); }
+    .sev { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10px; font-weight: 700; letter-spacing:.6px; }
+    @keyframes slideIn { from { opacity:0; transform: translateX(-6px) } to { opacity:1; transform: translateX(0) } }
+    .row { animation: slideIn .5s ease-out both; }
+  </style>
+
+  <text class="ttl" x="20" y="40">Every quality gate, and what it really checks</text>
+  <text class="sub" x="20" y="62">Five checks stand between the CSVs and gold. Two of them are not doing what their names suggest.</text>
+
+  <g class="kick">
+    <text x="20" y="102">GATE</text>
+    <text x="270" y="102">WHAT IT ASSERTS</text>
+    <text x="676" y="102">DEFINED IN</text>
+    <text x="960" y="102">SEVERITY</text>
+  </g>
+  <line x1="20" y1="112" x2="1180" y2="112" stroke="var(--line)" stroke-width="1.5"/>
+
+  <!-- row 1 -->
+  <g class="row" style="animation-delay:.0s">
+    <rect x="20" y="122" width="1160" height="60" rx="10" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="20" y="122" width="4" height="60" rx="2" fill="var(--ok-ln)"/>
+    <text class="mb" x="36" y="146">check_not_empty</text>
+    <text class="m" x="36" y="164">BigQueryCheckOperator</text>
+    <text class="body" x="270" y="146">COUNT(*) is greater than zero for each of the six tables,</text>
+    <text class="body" x="270" y="164">catching a load that reports success but writes nothing.</text>
+    <text class="m" x="676" y="146">dags/insert_data_improved.py</text>
+    <text class="m" x="676" y="164">per table, inside a TaskGroup</text>
+    <rect x="960" y="138" width="88" height="22" rx="11" fill="var(--err-bg)" stroke="var(--err-ln)"/>
+    <text class="sev" x="1004" y="153" text-anchor="middle" fill="var(--err)">ERROR</text>
+  </g>
+
+  <!-- row 2 -->
+  <g class="row" style="animation-delay:.1s">
+    <rect x="20" y="190" width="1160" height="60" rx="10" fill="var(--warn-bg)" stroke="var(--warn-ln)"/>
+    <rect x="20" y="190" width="4" height="60" rx="2" fill="var(--warn-ln)"/>
+    <text class="mb" x="36" y="214" fill="var(--warn)">source freshness</text>
+    <text class="m" x="36" y="232" fill="var(--warn)">dbt source freshness</text>
+    <text class="body" x="270" y="214">Nothing yet. The source has no loaded_at_field, so there</text>
+    <text class="body" x="270" y="232">is no timestamp to compare against a threshold.</text>
+    <text class="m" x="676" y="214" fill="var(--warn)">walmart/models/source/sources.yml</text>
+    <text class="m" x="676" y="232" fill="var(--warn)">missing loaded_at_field</text>
+    <rect x="960" y="206" width="120" height="22" rx="11" fill="var(--warn-bg)" stroke="var(--warn-ln)"/>
+    <text class="sev" x="1020" y="221" text-anchor="middle" fill="var(--warn)">NOT CONFIGURED</text>
+  </g>
+
+  <!-- row 3 -->
+  <g class="row" style="animation-delay:.2s">
+    <rect x="20" y="258" width="1160" height="60" rx="10" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="20" y="258" width="4" height="60" rx="2" fill="var(--ok-ln)"/>
+    <text class="mb" x="36" y="282">not_null + unique</text>
+    <text class="m" x="36" y="300">six models, twelve tests</text>
+    <text class="body" x="270" y="282">Every natural key in silver_tech is present and appears exactly</text>
+    <text class="body" x="270" y="300">once, which is also the precondition for the MERGE to behave.</text>
+    <text class="m" x="676" y="282">walmart/models/silver_tech/properties.yml</text>
+    <text class="m" x="676" y="300">data_tests on the id columns</text>
+    <rect x="960" y="274" width="88" height="22" rx="11" fill="var(--err-bg)" stroke="var(--err-ln)"/>
+    <text class="sev" x="1004" y="289" text-anchor="middle" fill="var(--err)">ERROR</text>
+  </g>
+
+  <!-- row 4 -->
+  <g class="row" style="animation-delay:.3s">
+    <rect x="20" y="326" width="1160" height="60" rx="10" fill="var(--warn-bg)" stroke="var(--warn-ln)"/>
+    <rect x="20" y="326" width="4" height="60" rx="2" fill="var(--warn-ln)"/>
+    <text class="mb" x="36" y="350" fill="var(--warn)">expression_is_true</text>
+    <text class="m" x="36" y="368" fill="var(--warn)">dbt_utils, one model</text>
+    <text class="body" x="270" y="350">products_tech.price is greater than zero, with both error_if</text>
+    <text class="body" x="270" y="368">and warning_if set. Only error_if is a real argument.</text>
+    <text class="m" x="676" y="350" fill="var(--warn)">walmart/models/silver_tech/properties.yml</text>
+    <text class="m" x="676" y="368" fill="var(--warn)">warning_if should be warn_if</text>
+    <rect x="960" y="342" width="88" height="22" rx="11" fill="var(--err-bg)" stroke="var(--err-ln)"/>
+    <text class="sev" x="1004" y="357" text-anchor="middle" fill="var(--err)">ERROR</text>
+  </g>
+
+  <!-- row 5 -->
+  <g class="row" style="animation-delay:.4s">
+    <rect x="20" y="394" width="1160" height="60" rx="10" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="20" y="394" width="4" height="60" rx="2" fill="var(--ok-ln)"/>
+    <text class="mb" x="36" y="418">test_obt</text>
+    <text class="m" x="36" y="436">singular test</text>
+    <text class="body" x="270" y="418">No NULL surrogate key anywhere in obt_biz, since the snapshots</text>
+    <text class="body" x="270" y="436">and the fact join on them, so a NULL drops rows silently.</text>
+    <text class="m" x="676" y="418">walmart/tests/test_obt.sql</text>
+    <text class="m" x="676" y="436">config severity equals warn</text>
+    <rect x="960" y="410" width="88" height="22" rx="11" fill="var(--warn-bg)" stroke="var(--warn-ln)"/>
+    <text class="sev" x="1004" y="425" text-anchor="middle" fill="var(--warn)">WARN</text>
+  </g>
+
+  <!-- coverage note -->
+  <g transform="translate(20,474)">
+    <rect x="0" y="0" width="1160" height="118" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="26">What is not covered anywhere</text>
+    <text class="body" x="18" y="48">No test checks that total_amount on an order matches the sum of its line_amount values, nothing checks row counts</text>
+    <text class="body" x="18" y="66">between layers, and nothing asserts referential integrity from order_items to orders and products. Those are the</text>
+    <text class="body" x="18" y="84">three checks that would have surfaced the employee fan-out.</text>
+    <text class="body" x="18" y="106">There is also no test on the gold layer at all. fact_orders and the five dimensions build with no assertions behind them.</text>
+  </g>
+
+  <g transform="translate(20,606)">
+    <rect x="0" y="0" width="1160" height="110" rx="12" fill="var(--card)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="26">Small fixes that would make these behave as named</text>
+    <text class="m" x="18" y="50">1. sources.yml: add loaded_at_field: updated_timestamp and a freshness block, or drop the source_freshness task.</text>
+    <text class="m" x="18" y="68">2. properties.yml: rename warning_if to warn_if, and pick one severity on purpose.</text>
+    <text class="m" x="18" y="86">3. tests/test_obt.sql: promote to error for the keys that must never be null, and keep warn only for employee_id, which is</text>
+    <text class="m" x="18" y="102">nullable by construction because it comes from a LEFT JOIN.</text>
+  </g>
+</svg>

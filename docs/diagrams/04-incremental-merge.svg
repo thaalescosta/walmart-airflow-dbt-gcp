@@ -1,0 +1,205 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">How the incremental silver models work</title>
+  <desc id="dsc">Three panel animation: the first run loads the whole bronze table, the second run filters bronze rows by a watermark on updated_timestamp and merges the result on the natural key, inserting new rows and updating changed ones while leaving unchanged rows alone.</desc>
+
+  <style>
+    svg {
+      --ink:#0f172a; --mut:#64748b; --faint:#94a3b8;
+      --line:#cbd5e1; --card:#ffffff; --soft:#f8fafc;
+      --ins:#15803d; --ins-bg:#f0fdf4; --ins-ln:#22c55e;
+      --upd:#0369a1; --upd-bg:#f0f9ff; --upd-ln:#0ea5e9;
+      --skip:#64748b; --warn:#b45309; --warn-bg:#fffbeb; --warn-ln:#f59e0b;
+      --dbt:#c2410c;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink:#e2e8f0; --mut:#94a3b8; --faint:#64748b;
+        --line:#334155; --card:#0f172a; --soft:#111c2e;
+        --ins:#4ade80; --ins-bg:#04140a; --ins-ln:#15803d;
+        --upd:#7dd3fc; --upd-bg:#0a1a26; --upd-ln:#0369a1;
+        --skip:#64748b; --warn:#fbbf24; --warn-bg:#1c1408; --warn-ln:#b45309;
+        --dbt:#fdba74;
+      }
+    }
+    text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .ttl { font-size: 24px; font-weight: 700; fill: var(--ink); }
+    .sub { font-size: 13px; fill: var(--mut); }
+    .kick { font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; fill: var(--mut); }
+    .h2 { font-size: 15px; font-weight: 700; fill: var(--ink); }
+    .h3 { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+    .body { font-size: 11.5px; fill: var(--mut); }
+    .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; fill: var(--mut); }
+    .mb { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; font-weight: 700; fill: var(--ink); }
+    .th { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9.5px; font-weight: 700; fill: var(--faint); letter-spacing:.4px; }
+    @keyframes scan { 0% { transform: translateY(0) } 100% { transform: translateY(150px) } }
+    .scan { animation: scan 3s ease-in-out infinite alternate; }
+    @keyframes blink { 0%,100% { opacity:.4 } 50% { opacity:1 } }
+    .blink { animation: blink 2.2s ease-in-out infinite; }
+    @keyframes slide { from { transform: translateX(0) } to { transform: translateX(6px) } }
+  </style>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+    <linearGradient id="scanGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--ins)" stop-opacity="0"/>
+      <stop offset="100%" stop-color="var(--ins)" stop-opacity="0.22"/>
+    </linearGradient>
+  </defs>
+
+  <text class="ttl" x="20" y="40">How a silver_tech model stays incremental</text>
+  <text class="sub" x="20" y="62">Every model in silver_tech uses the same fifteen lines: a pass-through with an audit column, a watermark filter, and a merge key.</text>
+
+  <!-- code strip -->
+  <g transform="translate(20,80)">
+    <rect x="0" y="0" width="1160" height="72" rx="10" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="0" y="0" width="4" height="72" rx="2" fill="#FF6947"/>
+    <text class="m" x="18" y="22"><tspan fill="var(--dbt)">{{</tspan> config( unique_key=<tspan fill="var(--ink)">'order_id'</tspan> ) <tspan fill="var(--dbt)">}}</tspan></text>
+    <text class="m" x="18" y="40">SELECT *, current_timestamp() AS processed_at FROM <tspan fill="var(--ink)">{{ source('walmart', 'orders') }}</tspan></text>
+    <text class="m" x="18" y="58">{% if is_incremental() %} WHERE updated_timestamp &gt; (SELECT COALESCE(MAX(updated_timestamp), '1900-01-01') FROM <tspan fill="var(--ink)">{{ this }}</tspan>) {% endif %}</text>
+    <g transform="translate(880,12)">
+      <rect x="0" y="0" width="262" height="48" rx="8" fill="var(--soft)" stroke="var(--line)"/>
+      <text class="th" x="12" y="18">WHY IT IS SAFE TO RE-RUN</text>
+      <text class="m" x="12" y="34">MERGE dedupes on unique_key, so an</text>
+      <text class="m" x="12" y="48">overlapping watermark cannot double rows.</text>
+    </g>
+  </g>
+
+  <!-- ============ PANEL A ============ -->
+  <g transform="translate(20,176)">
+    <rect x="0" y="0" width="330" height="270" rx="12" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="0" y="0" width="330" height="4" rx="2" fill="var(--faint)"/>
+    <text class="kick" x="16" y="26">RUN 1 · FIRST BUILD</text>
+    <text class="h2" x="16" y="48">is_incremental() is false</text>
+    <text class="m" x="16" y="70">no WHERE clause at all</text>
+    <g transform="translate(16,84)">
+      <text class="th" x="0" y="0">ORDER_ID</text>
+      <text class="th" x="80" y="0">UPDATED_AT</text>
+      <text class="th" x="212" y="0">IS_ACTIVE</text>
+      <line x1="0" y1="10" x2="298" y2="10" stroke="var(--line)"/>
+      <text class="mb" x="0" y="32">101</text><text class="m" x="80" y="32">2026-03-01 08:00</text><text class="m" x="212" y="32">Y</text>
+      <text class="mb" x="0" y="58">102</text><text class="m" x="80" y="58">2026-03-04 11:30</text><text class="m" x="212" y="58">Y</text>
+      <text class="mb" x="0" y="84">103</text><text class="m" x="80" y="84">2026-03-09 19:45</text><text class="m" x="212" y="84">Y</text>
+      <text class="mb" x="0" y="110">104</text><text class="m" x="80" y="110">2026-03-15 07:20</text><text class="m" x="212" y="110">Y</text>
+      <text class="mb" x="0" y="136">105</text><text class="m" x="80" y="136">2026-03-21 16:05</text><text class="m" x="212" y="136">Y</text>
+      <line x1="0" y1="150" x2="298" y2="150" stroke="var(--line)"/>
+      <text class="m" x="0" y="170" fill="var(--ink)">5 rows written, one run</text>
+    </g>
+  </g>
+
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)">
+    <path d="M354 310 H 386"/>
+  </g>
+  <circle cx="354" cy="310" r="3.5" fill="var(--line)"><animate attributeName="cx" values="356;384" dur="1.4s" repeatCount="indefinite"/></circle>
+
+  <!-- ============ PANEL B ============ -->
+  <g transform="translate(392,176)">
+    <rect x="0" y="0" width="380" height="270" rx="12" fill="var(--card)" stroke="var(--upd-ln)"/>
+    <rect x="0" y="0" width="380" height="4" rx="2" fill="var(--upd-ln)"/>
+    <text class="kick" x="16" y="26" fill="var(--upd)">RUN 2 · DAILY CDC ARRIVES</text>
+    <text class="h2" x="16" y="48">watermark = MAX(updated_at)</text>
+    <text class="m" x="16" y="70">= 2026-03-21 16:05 from {{ this }}</text>
+
+    <g transform="translate(16,84)">
+      <!-- watermark line -->
+      <g transform="translate(0,86)">
+        <line x1="-6" y1="0" x2="348" y2="0" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text class="th" x="252" y="-5" fill="var(--warn)">MAX(updated_at)</text>
+      </g>
+      <!-- selected rows -->
+      <rect x="-8" y="98" width="356" height="76" rx="8" fill="var(--ins-bg)" stroke="var(--ins-ln)"/>
+      <text class="mb" x="0" y="118">104</text><text class="m" x="80" y="118">2026-03-26 09:10</text><text class="m" x="212" y="118">Y</text>
+      <text class="mb" x="0" y="144">105</text><text class="m" x="80" y="144">2026-03-26 09:10</text><text class="m" x="212" y="144">N</text>
+      <text class="mb" x="0" y="168">106</text><text class="m" x="80" y="168">2026-03-27 22:40</text><text class="m" x="212" y="168">Y</text>
+      <text class="m" x="286" y="118" fill="var(--ins)" font-weight="700">sel</text>
+      <text class="m" x="286" y="144" fill="var(--ins)" font-weight="700">sel</text>
+      <text class="m" x="286" y="168" fill="var(--ins)" font-weight="700">sel</text>
+      <!-- skipped rows -->
+      <text class="mb" x="0" y="32" opacity="0.45">101</text><text class="m" x="80" y="32" opacity="0.45">2026-03-01 08:00</text><text class="m" x="212" y="32" opacity="0.45">Y</text><text class="m" x="286" y="32" fill="var(--skip)" opacity="0.6">skip</text>
+      <text class="mb" x="0" y="58" opacity="0.45">102</text><text class="m" x="80" y="58" opacity="0.45">2026-03-04 11:30</text><text class="m" x="212" y="58" opacity="0.45">Y</text><text class="m" x="286" y="58" fill="var(--skip)" opacity="0.6">skip</text>
+      <text class="mb" x="0" y="186" opacity="0.45">103</text><text class="m" x="80" y="186" opacity="0.45">2026-03-09 19:45</text><text class="m" x="212" y="186" opacity="0.45">Y</text><text class="m" x="286" y="186" fill="var(--skip)" opacity="0.6">skip</text>
+      <text class="mb" x="0" y="212" opacity="0.45">105</text><text class="m" x="80" y="212" opacity="0.45">2026-03-21 16:05</text><text class="m" x="212" y="212" opacity="0.45">Y</text><text class="m" x="286" y="212" fill="var(--skip)" opacity="0.6">skip</text>
+      <!-- scan animation over selected block -->
+      <rect class="scan" x="-8" y="98" width="356" height="38" fill="url(#scanGrad)"/>
+    </g>
+    <text class="m" x="16" y="256" fill="var(--ins)">3 of 5 rows pass the watermark</text>
+  </g>
+
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)">
+    <path d="M776 310 H 808"/>
+  </g>
+  <circle cx="776" cy="310" r="3.5" fill="var(--upd)"><animate attributeName="cx" values="778;806" dur="1.4s" begin="0.5s" repeatCount="indefinite"/></circle>
+
+  <!-- ============ PANEL C ============ -->
+  <g transform="translate(814,176)">
+    <rect x="0" y="0" width="366" height="270" rx="12" fill="var(--card)" stroke="#FF6947"/>
+    <rect x="0" y="0" width="366" height="4" rx="2" fill="#FF6947"/>
+    <text class="kick" x="16" y="26" fill="var(--dbt)">RESULT · MERGE ON UNIQUE_KEY</text>
+    <text class="h2" x="16" y="48">order_id decides the outcome</text>
+    <g transform="translate(16,64)">
+      <text class="th" x="0" y="0">ORDER_ID</text>
+      <text class="th" x="76" y="0">IS_ACTIVE</text>
+      <text class="th" x="170" y="0">OUTCOME</text>
+      <line x1="0" y1="10" x2="334" y2="10" stroke="var(--line)"/>
+
+      <g>
+        <text class="mb" x="0" y="34">101</text><text class="m" x="76" y="34">Y</text>
+        <text class="m" x="170" y="34" fill="var(--skip)">kept untouched</text>
+        <animate attributeName="opacity" values="1;1" dur="1s" repeatCount="indefinite"/>
+      </g>
+      <g>
+        <rect x="-8" y="44" width="350" height="26" rx="6" fill="var(--upd-bg)"/>
+        <text class="mb" x="0" y="62">105</text><text class="mb" x="76" y="62" fill="var(--upd)">Y to N</text>
+        <text class="m" x="170" y="62" fill="var(--upd)">updated</text>
+        <circle r="3.5" fill="var(--upd)">
+          <animate attributeName="cx" values="0;336" dur="1.8s" begin="0.3s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="57;57" dur="1.8s" begin="0.3s" repeatCount="indefinite"/>
+        </circle>
+        <animate attributeName="opacity" values="1;1" dur="1s" begin="0s" repeatCount="indefinite"/>
+      </g>
+      <g>
+        <text class="mb" x="0" y="90">102</text><text class="m" x="76" y="90">Y</text>
+        <text class="m" x="170" y="90" fill="var(--skip)">kept untouched</text>
+      </g>
+      <g>
+        <rect x="-8" y="100" width="350" height="26" rx="6" fill="var(--ins-bg)"/>
+        <text class="mb" x="0" y="118">104</text><text class="m" x="76" y="118">Y</text>
+        <text class="m" x="170" y="118" fill="var(--ins)">inserted</text>
+      </g>
+      <g>
+        <rect x="-8" y="128" width="350" height="26" rx="6" fill="var(--ins-bg)"/>
+        <text class="mb" x="0" y="146">106</text><text class="m" x="76" y="146">Y</text>
+        <text class="m" x="170" y="146" fill="var(--ins)">inserted</text>
+      </g>
+      <line x1="0" y1="166" x2="334" y2="166" stroke="var(--line)"/>
+      <text class="m" x="0" y="188" fill="var(--ink)">5 keys before, 6 keys after</text>
+    </g>
+    <g transform="translate(16,258)">
+      <rect x="0" y="0" width="334" height="0" fill="none"/>
+    </g>
+  </g>
+
+  <!-- ============ CAVEATS ============ -->
+  <g transform="translate(20,478)">
+    <rect x="0" y="0" width="1160" height="200" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="26">Four things this pattern does not do</text>
+
+    <text class="body" x="18" y="52">1. It never deletes. A row that disappears upstream stays in silver forever, and</text>
+    <text class="body" x="18" y="70">is_active = 'N' is carried along as data instead of being treated as a delete.</text>
+    <text class="body" x="18" y="88">In the seed data 550 of 10 000 orders and 115 of 2 000 customers are flagged</text>
+    <text class="body" x="18" y="106">inactive, and every one of them flows through to gold.</text>
+
+    <text class="body" x="18" y="132">2. It uses &gt; instead of &gt;=, so a row sharing the exact max timestamp is skipped</text>
+    <text class="body" x="18" y="150">on the next run. Bumping to &gt;= costs nothing, because MERGE dedupes anyway,</text>
+    <text class="body" x="18" y="168">and it closes the tie-drop window.</text>
+
+    <text class="body" x="600" y="52">3. It trusts updated_timestamp to be a reliable change marker and assumes nothing</text>
+    <text class="body" x="600" y="70">arrives late. A backfill carrying an old timestamp is silently ignored until some</text>
+    <text class="body" x="600" y="88">later run happens to clear the watermark.</text>
+
+    <text class="body" x="600" y="116">4. processed_at = current_timestamp() is re-stamped on every update, so it records</text>
+    <text class="body" x="600" y="134">when silver last touched a row, not when the source last changed. Use the source</text>
+    <text class="body" x="600" y="152" fill="var(--warn)">updated_timestamp for anything business-facing.</text>
+  </g>
+</svg>

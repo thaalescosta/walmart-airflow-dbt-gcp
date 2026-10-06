@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 712" width="1200" height="712" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">obt_biz: a config list that generates the joins</title>
+  <desc id="dsc">Animated diagram showing how the obt_biz dbt model declares six table configs in a Jinja list and loops over them to generate a six way left join, producing one wide business table. The fan out caused by joining employees on store_id is quantified.</desc>
+
+  <style>
+    svg {
+      --ink:#0f172a; --mut:#64748b; --faint:#94a3b8;
+      --line:#cbd5e1; --card:#ffffff; --soft:#f8fafc; --band:#f1f5f9;
+      --silver:#475569; --silver-ln:#94a3b8;
+      --dbt:#c2410c;
+      --hot:#b91c1c; --hot-bg:#fef2f2; --hot-ln:#ef4444;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink:#e2e8f0; --mut:#94a3b8; --faint:#64748b;
+        --line:#334155; --card:#0f172a; --soft:#111c2e; --band:#0b1220;
+        --silver:#cbd5e1; --silver-ln:#475569;
+        --dbt:#fdba74;
+        --hot:#f87171; --hot-bg:#1c0a0a; --hot-ln:#b91c1c;
+      }
+    }
+    text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .ttl { font-size: 24px; font-weight: 700; fill: var(--ink); }
+    .sub { font-size: 13px; fill: var(--mut); }
+    .kick { font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; fill: var(--mut); }
+    .h2 { font-size: 15px; font-weight: 700; fill: var(--ink); }
+    .h3 { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+    .body { font-size: 11.5px; fill: var(--mut); }
+    .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; fill: var(--mut); }
+    .mb { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; font-weight: 700; fill: var(--ink); }
+    .alias { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-weight: 700; }
+    .num { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 26px; font-weight: 700; }
+    .dash { stroke-dasharray: 5 5; animation: dash 1.2s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -10; } }
+    @keyframes pulseFill { 0%,100% { opacity:.22 } 50% { opacity:.6 } }
+    .pulseFill { animation: pulseFill 2.6s ease-in-out infinite; }
+  </style>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <text class="ttl" x="20" y="40">obt_biz — the business layer is one Jinja list and two loops</text>
+  <text class="sub" x="20" y="62">There is no hand written join list. Each entry declares its table, column block, alias and how it attaches.</text>
+
+  <!-- ============ LEFT : the config list ============ -->
+  <text class="kick" x="20" y="94" fill="var(--silver)">THE CONFIGS LIST · six entries, order matters</text>
+
+  <g>
+    <rect x="20" y="106" width="380" height="52" rx="10" fill="var(--card)" stroke="var(--silver-ln)" stroke-width="1.5"/>
+    <circle cx="48" cy="132" r="13" fill="var(--silver-ln)"/><text class="alias" x="48" y="136" text-anchor="middle" fill="var(--card)">o</text>
+    <text class="mb" x="72" y="128">orders_tech</text>
+    <text class="m" x="72" y="145">base table, no join condition</text>
+    <text class="m" x="390" y="136" text-anchor="end" fill="var(--faint)">12 cols</text>
+  </g>
+  <g>
+    <rect x="20" y="166" width="380" height="52" rx="10" fill="var(--card)" stroke="var(--silver-ln)"/>
+    <circle cx="48" cy="192" r="13" fill="var(--silver-ln)"/><text class="alias" x="48" y="196" text-anchor="middle" fill="var(--card)">c</text>
+    <text class="mb" x="72" y="188">customers_tech</text>
+    <text class="m" x="72" y="205">o.customer_id = c.customer_id</text>
+    <text class="m" x="390" y="196" text-anchor="end" fill="var(--faint)">10 cols</text>
+  </g>
+  <g>
+    <rect x="20" y="226" width="380" height="52" rx="10" fill="var(--card)" stroke="var(--silver-ln)"/>
+    <circle cx="48" cy="252" r="13" fill="var(--silver-ln)"/><text class="alias" x="48" y="256" text-anchor="middle" fill="var(--card)">oi</text>
+    <text class="mb" x="72" y="248">order_items_tech</text>
+    <text class="m" x="72" y="265">o.order_id = oi.order_id</text>
+    <text class="m" x="390" y="256" text-anchor="end" fill="var(--warn)">grain change</text>
+  </g>
+  <g>
+    <rect x="20" y="286" width="380" height="52" rx="10" fill="var(--card)" stroke="var(--silver-ln)"/>
+    <circle cx="48" cy="312" r="13" fill="var(--silver-ln)"/><text class="alias" x="48" y="316" text-anchor="middle" fill="var(--card)">p</text>
+    <text class="mb" x="72" y="308">products_tech</text>
+    <text class="m" x="72" y="325">oi.product_id = p.product_id</text>
+    <text class="m" x="390" y="316" text-anchor="end" fill="var(--faint)">many to one</text>
+  </g>
+  <g>
+    <rect x="20" y="346" width="380" height="52" rx="10" fill="var(--hot-bg)" stroke="var(--hot-ln)" stroke-width="2" class="pulseFill"/>
+    <circle cx="48" cy="372" r="13" fill="var(--hot)"/><text class="alias" x="48" y="376" text-anchor="middle" fill="#fff">e</text>
+    <text class="mb" x="72" y="368">employees_tech</text>
+    <text class="m" x="72" y="385" fill="var(--hot)">o.store_id = e.store_id</text>
+    <text class="m" x="390" y="376" text-anchor="end" fill="var(--hot)" font-weight="700">fans out ~10x</text>
+  </g>
+  <g>
+    <rect x="20" y="406" width="380" height="52" rx="10" fill="var(--card)" stroke="var(--silver-ln)"/>
+    <circle cx="48" cy="432" r="13" fill="var(--silver-ln)"/><text class="alias" x="48" y="436" text-anchor="middle" fill="var(--card)">s</text>
+    <text class="mb" x="72" y="428">stores_tech</text>
+    <text class="m" x="72" y="445">o.store_id = s.store_id</text>
+    <text class="m" x="390" y="436" text-anchor="end" fill="var(--faint)">many to one</text>
+  </g>
+
+  <g transform="translate(20,472)">
+    <rect x="0" y="0" width="380" height="92" rx="10" fill="var(--hot-bg)" stroke="var(--hot-ln)"/>
+    <text class="h3" x="14" y="24" fill="var(--hot)">Two joins fan out, one does not</text>
+    <text class="body" x="14" y="46">An order owns many order_items, so that join is</text>
+    <text class="body" x="14" y="63">the grain change.</text>
+    <text class="body" x="14" y="84">A store owns many employees, but an order has</text>
+  </g>
+
+  <!-- ============ MIDDLE : the loops ============ -->
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)"><path d="M404 282 H 434"/></g>
+  <circle cx="404" cy="282" r="3.5" fill="var(--line)"><animate attributeName="cx" values="406;432" dur="1.4s" repeatCount="indefinite"/></circle>
+
+  <text class="kick" x="440" y="94" fill="var(--dbt)">THE TWO LOOPS</text>
+  <g transform="translate(440,106)">
+    <rect x="0" y="0" width="330" height="216" rx="10" fill="var(--card)" stroke="var(--line)"/>
+    <rect x="0" y="0" width="4" height="216" rx="2" fill="#FF6947"/>
+    <text class="m" x="16" y="24">{% set configs = [ ... ] %}</text>
+    <text class="m" x="16" y="48" fill="var(--faint)">-- column block</text>
+    <text class="m" x="16" y="66">{% for config in configs %}</text>
+    <text class="m" x="28" y="84">{{ config['columns'] }}</text>
+    <text class="m" x="16" y="102">{% endfor %}</text>
+    <text class="m" x="16" y="126" fill="var(--faint)">-- join block</text>
+    <text class="m" x="16" y="144">{% for config in configs %}</text>
+    <text class="m" x="28" y="162">{% if loop.first %}</text>
+    <text class="m" x="36" y="180">{{ config['table'] }} AS {{ ... }}</text>
+    <text class="m" x="28" y="198">{% else %} LEFT JOIN ...</text>
+  </g>
+  <g transform="translate(440,332)">
+    <rect x="0" y="0" width="330" height="70" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="mb" x="14" y="24">Result: a six way LEFT JOIN</text>
+    <text class="body" x="14" y="44">Each config after the first is a LEFT JOIN,</text>
+    <text class="body" x="14" y="60">so no order is dropped by a missing dimension.</text>
+  </g>
+  <g transform="translate(440,410)">
+    <rect x="0" y="0" width="330" height="154" rx="10" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="14" y="24">Why a config list at all</text>
+    <text class="body" x="14" y="48">Adding a column, a table or an audit stamp is</text>
+    <text class="body" x="14" y="66">a dictionary edit, and the prefixes are applied</text>
+    <text class="body" x="14" y="84">by hand in the string so downstream models can</text>
+    <text class="body" x="14" y="102">pick columns without ambiguity.</text>
+    <text class="body" x="14" y="130" fill="var(--hot)">The trade-off: a Jinja data structure is not</text>
+    <text class="body" x="14" y="146" fill="var(--hot)">validatable SQL, and nothing checks the columns.</text>
+  </g>
+
+  <!-- ============ RIGHT : the output ============ -->
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)"><path d="M774 282 H 804"/></g>
+  <circle cx="774" cy="282" r="3.5" fill="var(--line)"><animate attributeName="cx" values="776;802" dur="1.4s" begin="0.5s" repeatCount="indefinite"/></circle>
+
+  <text class="kick" x="810" y="94" fill="var(--silver)">THE OUTPUT · one row per order line per employee</text>
+  <g transform="translate(810,106)">
+    <rect x="0" y="0" width="370" height="212" rx="12" fill="var(--card)" stroke="var(--silver-ln)"/>
+    <text class="h2" x="16" y="28">about 60 columns, 6 prefixes</text>
+    <g transform="translate(16,42)">
+      <rect x="0" y="0" width="338" height="24" rx="6" fill="var(--soft)" stroke="var(--line)"/><text class="mb" x="10" y="16">o.*</text><text class="m" x="56" y="16">order_id, store_id, total_amount</text><text class="m" x="330" y="16" text-anchor="end">12</text>
+      <rect x="0" y="28" width="338" height="24" rx="6" fill="var(--soft)" stroke="var(--line)"/><text class="mb" x="10" y="44">c.*</text><text class="m" x="56" y="44">customer_first_name, city</text><text class="m" x="330" y="44" text-anchor="end">10</text>
+      <rect x="0" y="56" width="338" height="24" rx="6" fill="var(--soft)" stroke="var(--line)"/><text class="mb" x="10" y="72">oi.*</text><text class="m" x="56" y="72">order_item_id, quantity, line_amount</text><text class="m" x="330" y="72" text-anchor="end">10</text>
+      <rect x="0" y="84" width="338" height="24" rx="6" fill="var(--soft)" stroke="var(--line)"/><text class="mb" x="10" y="100">p.*</text><text class="m" x="56" y="100">product_name, category, price</text><text class="m" x="330" y="100" text-anchor="end">9</text>
+      <rect x="0" y="112" width="338" height="24" rx="6" fill="var(--hot-bg)" stroke="var(--hot-ln)"/><text class="mb" x="10" y="128" fill="var(--hot)">e.*</text><text class="m" x="56" y="128">employee_id, job_title, salary</text><text class="m" x="330" y="128" text-anchor="end" fill="var(--hot)">11</text>
+      <rect x="0" y="140" width="338" height="24" rx="6" fill="var(--soft)" stroke="var(--line)"/><text class="mb" x="10" y="156">s.*</text><text class="m" x="56" y="156">store_name, store_city, province</text><text class="m" x="330" y="156" text-anchor="end">8</text>
+    </g>
+    <text class="m" x="16" y="196" fill="var(--faint)">plus obt_b_processed_at on the first block</text>
+  </g>
+
+  <!-- ============ FAN OUT MATH ============ -->
+  <g transform="translate(810,332)">
+    <rect x="0" y="0" width="370" height="232" rx="12" fill="var(--hot-bg)" stroke="var(--hot-ln)"/>
+    <text class="kick" x="16" y="26" fill="var(--hot)">FAN OUT, ONE ORDER LINE AT A TIME</text>
+    <g transform="translate(16,44)">
+      <text class="num" x="0" y="24" fill="var(--ink)">1</text>
+      <text class="body" x="34" y="18">row in the base table</text>
+      <text class="body" x="34" y="34">orders_tech, filtered by nothing</text>
+    </g>
+    <g transform="translate(16,96)">
+      <text class="num" x="0" y="24" fill="var(--ink)">x 3</text>
+      <text class="body" x="52" y="18">order_items per order</text>
+      <text class="body" x="52" y="34">1 to 5 lines, 30 021 in total</text>
+    </g>
+    <g transform="translate(16,148)">
+      <text class="num" x="0" y="24" fill="var(--hot)">x 10</text>
+      <text class="body" x="52" y="18">employees per store</text>
+      <text class="body" x="52" y="34">4 to 18, average about 10</text>
+    </g>
+    <line x1="16" y1="198" x2="354" y2="198" stroke="var(--hot-ln)"/>
+    <text class="num" x="16" y="226" fill="var(--hot)">30</text>
+    <text class="body" x="72" y="226" fill="var(--ink)">rows per order line</text>
+  </g>
+
+  <!-- ============ FOOTER ============ -->
+  <g transform="translate(20,580)">
+    <rect x="0" y="0" width="1160" height="116" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="26">The rule that falls out of this</text>
+    <text class="body" x="18" y="48">obt_biz is a transport table, not an analytics table. Joining a dimension whose key is not on the fact</text>
+    <text class="body" x="18" y="66">grain multiplies the fact. Keep the employee attribute reachable only through a proper bridge or a</text>
+    <text class="body" x="18" y="84">snapshot dimension, and treat any SUM over a fact_orders measure with suspicion.</text>
+    <text class="m" x="18" y="106">tests/test_obt.sql flags NULL surrogate keys at severity warn, which catches broken keys but not duplicated rows</text>
+  </g>
+</svg>

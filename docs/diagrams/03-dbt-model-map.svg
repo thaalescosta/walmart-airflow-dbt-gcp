@@ -1,0 +1,284 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 676" width="1200" height="676" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">dbt model map with row counts</title>
+  <desc id="dsc">Animated lineage diagram of the dbt project: six bronze source tables feed six incremental silver technical models, which are joined by the obt_biz business model, which is in turn read by five ephemeral models for the dimension snapshots and by the fact_orders table. Row counts are annotated and the fan-out caused by the employee join is highlighted.</desc>
+
+  <style>
+    svg {
+      --ink:#0f172a; --mut:#64748b; --faint:#94a3b8;
+      --line:#cbd5e1; --card:#ffffff; --soft:#f8fafc; --band:#f1f5f9;
+      --bronze:#b45309; --bronze-ln:#f59e0b;
+      --silver:#475569; --silver-ln:#94a3b8;
+      --gold:#a16207;   --gold-ln:#eab308;
+      --eph:#6d28d9;    --eph-ln:#a78bfa;
+      --warn:#b45309; --warn-bg:#fffbeb; --warn-ln:#f59e0b;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink:#e2e8f0; --mut:#94a3b8; --faint:#64748b;
+        --line:#334155; --card:#0f172a; --soft:#111c2e; --band:#0b1220;
+        --bronze:#fbbf24; --bronze-ln:#b45309;
+        --silver:#cbd5e1; --silver-ln:#475569;
+        --gold:#facc15;   --gold-ln:#a16207;
+        --eph:#c4b5fd;    --eph-ln:#6d28d9;
+        --warn:#fbbf24; --warn-bg:#1c1408; --warn-ln:#b45309;
+      }
+    }
+    text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .ttl { font-size: 24px; font-weight: 700; fill: var(--ink); }
+    .sub { font-size: 13px; fill: var(--mut); }
+    .kick { font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; fill: var(--mut); }
+    .name { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 700; fill: var(--ink); }
+    .meta { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 9.5px; fill: var(--mut); }
+    .cnt  { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10px; font-weight: 700; }
+    .body { font-size: 11.5px; fill: var(--mut); }
+    .h3 { font-size: 12.5px; font-weight: 700; fill: var(--ink); }
+    .dash { stroke-dasharray: 5 5; animation: dash 1.2s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -10; } }
+    @keyframes blink { 0%,100% { opacity:.45 } 50% { opacity:1 } }
+    .blink { animation: blink 2.2s ease-in-out infinite; }
+  </style>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <text class="ttl" x="16" y="40">The dbt project, node by node</text>
+  <text class="sub" x="16" y="62">Every node, its materialisation, and what it actually returns. Row counts come from the seed CSVs on a full load.</text>
+
+  <!-- band headers -->
+  <g class="kick">
+    <text x="16" y="150" fill="var(--bronze)">SOURCE · walmart.bronze</text>
+    <text x="214" y="150" fill="var(--silver)">SILVER TECH · incremental</text>
+    <text x="442" y="150" fill="var(--silver)">SILVER BIZ</text>
+    <text x="640" y="150" fill="var(--eph)">GOLD · ephemeral</text>
+    <text x="868" y="150" fill="var(--gold)">GOLD · snapshots and fact</text>
+  </g>
+
+  <!-- ================= BAND 1 : sources ================= -->
+  <g>
+    <g>
+      <rect x="16" y="176" width="170" height="38" rx="8" fill="var(--card)" stroke="var(--bronze-ln)"/>
+      <text class="name" x="28" y="192">orders</text>
+      <text class="meta" x="28" y="206">table</text>
+      <text class="cnt" x="176" y="192" text-anchor="end" fill="var(--bronze)">10 000</text>
+    </g>
+    <g transform="translate(0,46)">
+      <rect x="16" y="176" width="170" height="38" rx="8" fill="var(--card)" stroke="var(--bronze-ln)"/>
+      <text class="name" x="28" y="192">order_items</text>
+      <text class="meta" x="28" y="206">table</text>
+      <text class="cnt" x="176" y="192" text-anchor="end" fill="var(--bronze)">30 021</text>
+    </g>
+    <g transform="translate(0,92)">
+      <rect x="16" y="176" width="170" height="38" rx="8" fill="var(--card)" stroke="var(--bronze-ln)"/>
+      <text class="name" x="28" y="192">customers</text>
+      <text class="meta" x="28" y="206">table</text>
+      <text class="cnt" x="176" y="192" text-anchor="end" fill="var(--bronze)">2 000</text>
+    </g>
+    <g transform="translate(0,138)">
+      <rect x="16" y="176" width="170" height="38" rx="8" fill="var(--card)" stroke="var(--bronze-ln)"/>
+      <text class="name" x="28" y="192">products</text>
+      <text class="meta" x="28" y="206">table</text>
+      <text class="cnt" x="176" y="192" text-anchor="end" fill="var(--bronze)">500</text>
+    </g>
+    <g transform="translate(0,184)">
+      <rect x="16" y="176" width="170" height="38" rx="8" fill="var(--card)" stroke="var(--bronze-ln)"/>
+      <text class="name" x="28" y="192">employees</text>
+      <text class="meta" x="28" y="206">table</text>
+      <text class="cnt" x="176" y="192" text-anchor="end" fill="var(--bronze)">250</text>
+    </g>
+    <g transform="translate(0,230)">
+      <rect x="16" y="176" width="170" height="38" rx="8" fill="var(--card)" stroke="var(--bronze-ln)"/>
+      <text class="name" x="28" y="192">stores</text>
+      <text class="meta" x="28" y="206">table</text>
+      <text class="cnt" x="176" y="192" text-anchor="end" fill="var(--bronze)">25</text>
+    </g>
+  </g>
+
+  <!-- ================= BAND 2 : silver_tech ================= -->
+  <g>
+    <g>
+      <rect x="214" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--silver-ln)"/>
+      <text class="name" x="226" y="192">orders_tech</text>
+      <text class="meta" x="226" y="206">incremental · merge · order_id</text>
+      <text class="cnt" x="404" y="192" text-anchor="end" fill="var(--silver)">10 000</text>
+    </g>
+    <g transform="translate(0,46)">
+      <rect x="214" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--silver-ln)"/>
+      <text class="name" x="226" y="192">order_items_tech</text>
+      <text class="meta" x="226" y="206">incremental · merge · order_item_id</text>
+      <text class="cnt" x="404" y="192" text-anchor="end" fill="var(--silver)">30 021</text>
+    </g>
+    <g transform="translate(0,92)">
+      <rect x="214" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--silver-ln)"/>
+      <text class="name" x="226" y="192">customers_tech</text>
+      <text class="meta" x="226" y="206">incremental · merge · customer_id</text>
+      <text class="cnt" x="404" y="192" text-anchor="end" fill="var(--silver)">2 000</text>
+    </g>
+    <g transform="translate(0,138)">
+      <rect x="214" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--silver-ln)"/>
+      <text class="name" x="226" y="192">products_tech</text>
+      <text class="meta" x="226" y="206">incremental · merge · product_id</text>
+      <text class="cnt" x="404" y="192" text-anchor="end" fill="var(--silver)">500</text>
+    </g>
+    <g transform="translate(0,184)">
+      <rect x="214" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--silver-ln)"/>
+      <text class="name" x="226" y="192">employees_tech</text>
+      <text class="meta" x="226" y="206">incremental · merge · employee_id</text>
+      <text class="cnt" x="404" y="192" text-anchor="end" fill="var(--silver)">250</text>
+    </g>
+    <g transform="translate(0,230)">
+      <rect x="214" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--silver-ln)"/>
+      <text class="name" x="226" y="192">stores_tech</text>
+      <text class="meta" x="226" y="206">incremental · merge · store_id</text>
+      <text class="cnt" x="404" y="192" text-anchor="end" fill="var(--silver)">25</text>
+    </g>
+  </g>
+
+  <!-- ================= BAND 3 : obt_biz ================= -->
+  <g>
+    <rect x="442" y="228" width="170" height="176" rx="12" fill="var(--card)" stroke="var(--silver-ln)" stroke-width="2"/>
+    <rect x="442" y="228" width="170" height="4" rx="2" fill="var(--silver-ln)"/>
+    <text class="kick" x="456" y="254" fill="var(--silver)">TABLE</text>
+    <text class="name" x="456" y="278" font-size="15">obt_biz</text>
+    <text class="body" x="456" y="298">one wide business</text>
+    <text class="body" x="456" y="314">table, 6 configs</text>
+    <text class="body" x="456" y="330">declare the joins</text>
+    <g transform="translate(456,346)">
+      <rect x="0" y="0" width="142" height="22" rx="6" fill="var(--warn-bg)" stroke="var(--warn-ln)"/>
+      <text class="cnt" x="71" y="15" text-anchor="middle" fill="var(--warn)">300 513 rows</text>
+    </g>
+    <text class="meta" x="456" y="386">from 30 021 input lines</text>
+  </g>
+
+  <!-- ================= BAND 4 : ephemeral ================= -->
+  <g>
+    <g>
+      <rect x="640" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--eph-ln)" stroke-dasharray="4 3"/>
+      <text class="name" x="652" y="192">eph_orders</text>
+      <text class="meta" x="652" y="206">ephemeral · DISTINCT order_id</text>
+      <text class="cnt" x="830" y="192" text-anchor="end" fill="var(--eph)">10 000</text>
+    </g>
+    <g transform="translate(0,46)">
+      <rect x="640" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--eph-ln)" stroke-dasharray="4 3"/>
+      <text class="name" x="652" y="192">eph_customers</text>
+      <text class="meta" x="652" y="206">ephemeral · DISTINCT</text>
+      <text class="cnt" x="830" y="192" text-anchor="end" fill="var(--eph)">2 000</text>
+    </g>
+    <g transform="translate(0,92)">
+      <rect x="640" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--eph-ln)" stroke-dasharray="4 3"/>
+      <text class="name" x="652" y="192">eph_products</text>
+      <text class="meta" x="652" y="206">ephemeral · DISTINCT</text>
+      <text class="cnt" x="830" y="192" text-anchor="end" fill="var(--eph)">500</text>
+    </g>
+    <g transform="translate(0,138)">
+      <rect x="640" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--eph-ln)" stroke-dasharray="4 3"/>
+      <text class="name" x="652" y="192">eph_employees</text>
+      <text class="meta" x="652" y="206">ephemeral · DISTINCT</text>
+      <text class="cnt" x="830" y="192" text-anchor="end" fill="var(--eph)">250</text>
+    </g>
+    <g transform="translate(0,184)">
+      <rect x="640" y="176" width="200" height="38" rx="8" fill="var(--card)" stroke="var(--eph-ln)" stroke-dasharray="4 3"/>
+      <text class="name" x="652" y="192">eph_stores</text>
+      <text class="meta" x="652" y="206">ephemeral · DISTINCT</text>
+      <text class="cnt" x="830" y="192" text-anchor="end" fill="var(--eph)">25</text>
+    </g>
+  </g>
+
+  <!-- ================= BAND 5 : gold ================= -->
+  <g>
+    <g>
+      <rect x="868" y="176" width="280" height="38" rx="8" fill="var(--card)" stroke="var(--gold-ln)"/>
+      <text class="name" x="880" y="192">dim_orders</text>
+      <text class="meta" x="880" y="206">snapshot · timestamp · order_updated_timestamp</text>
+      <text class="cnt" x="1138" y="192" text-anchor="end" fill="var(--gold)">10 000</text>
+    </g>
+    <g transform="translate(0,46)">
+      <rect x="868" y="176" width="280" height="38" rx="8" fill="var(--card)" stroke="var(--gold-ln)"/>
+      <text class="name" x="880" y="192">dim_customers</text>
+      <text class="meta" x="880" y="206">snapshot · timestamp · customer_updated_timestamp</text>
+      <text class="cnt" x="1138" y="192" text-anchor="end" fill="var(--gold)">2 000</text>
+    </g>
+    <g transform="translate(0,92)">
+      <rect x="868" y="176" width="280" height="38" rx="8" fill="var(--card)" stroke="var(--gold-ln)"/>
+      <text class="name" x="880" y="192">dim_products</text>
+      <text class="meta" x="880" y="206">snapshot · timestamp · product_updated_timestamp</text>
+      <text class="cnt" x="1138" y="192" text-anchor="end" fill="var(--gold)">500</text>
+    </g>
+    <g transform="translate(0,138)">
+      <rect x="868" y="176" width="280" height="38" rx="8" fill="var(--card)" stroke="var(--gold-ln)"/>
+      <text class="name" x="880" y="192">dim_employees</text>
+      <text class="meta" x="880" y="206">snapshot · timestamp · employee_updated_timestamp</text>
+      <text class="cnt" x="1138" y="192" text-anchor="end" fill="var(--gold)">250</text>
+    </g>
+    <g transform="translate(0,184)">
+      <rect x="868" y="176" width="280" height="38" rx="8" fill="var(--card)" stroke="var(--gold-ln)"/>
+      <text class="name" x="880" y="192">dim_stores</text>
+      <text class="meta" x="880" y="206">snapshot · timestamp · store_updated_timestamp</text>
+      <text class="cnt" x="1138" y="192" text-anchor="end" fill="var(--gold)">25</text>
+    </g>
+    <g transform="translate(0,240)">
+      <rect x="868" y="176" width="280" height="54" rx="10" fill="var(--card)" stroke="var(--gold-ln)" stroke-width="2"/>
+      <rect x="868" y="176" width="280" height="4" rx="2" fill="var(--gold-ln)"/>
+      <text class="name" x="880" y="196">fact_orders</text>
+      <text class="meta" x="880" y="212">table · 11 keys and measures · no time filter</text>
+      <text class="meta" x="880" y="225">built from obt_biz only, dims are never joined</text>
+      <text class="cnt" x="1138" y="196" text-anchor="end" fill="var(--warn)">300 513</text>
+    </g>
+  </g>
+
+  <!-- ================= EDGES ================= -->
+  <g stroke="var(--line)" stroke-width="1.6" fill="none" marker-end="url(#ar)">
+    <path d="M188 195 H 208"/><path d="M188 241 H 208"/><path d="M188 287 H 208"/>
+    <path d="M188 333 H 208"/><path d="M188 379 H 208"/><path d="M188 425 H 208"/>
+  </g>
+  <g stroke="var(--line)" stroke-width="1.6" fill="none">
+    <path d="M416 195 H 430 V 316"/>
+    <path d="M416 241 H 424 V 316"/>
+    <path d="M416 287 H 418"/>
+    <path d="M416 333 H 424 V 316"/>
+    <path d="M416 379 H 430 V 316"/>
+    <path d="M416 425 H 434 V 316"/>
+  </g>
+  <circle r="3" fill="var(--line)"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath xlink:href="#bus1" href="#bus1"/></animateMotion></circle>
+  <path id="bus1" d="M416 287 H 438" fill="none" stroke="none"/>
+  <g stroke="var(--eph-ln)" stroke-width="1.6" fill="none" marker-end="url(#ar)" opacity="0.85">
+    <path d="M614 280 C 626 280 626 195 636 195"/>
+    <path d="M614 296 C 626 296 626 241 636 241"/>
+    <path d="M614 312 H 636"/>
+    <path d="M614 328 C 626 328 626 333 636 333"/>
+    <path d="M614 344 C 626 344 626 379 636 379"/>
+  </g>
+  <g stroke="var(--gold-ln)" stroke-width="1.6" fill="none" marker-end="url(#ar)" opacity="0.85">
+    <path d="M842 195 H 862"/><path d="M842 241 H 862"/><path d="M842 287 H 862"/>
+    <path d="M842 333 H 862"/><path d="M842 379 H 862"/>
+  </g>
+  <path d="M614 386 V 443 H 862" stroke="var(--warn-ln)" stroke-width="2.5" fill="none" marker-end="url(#ar)" class="dash"/>
+  <circle r="4" fill="var(--warn)"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath xlink:href="#factpath" href="#factpath"/></animateMotion></circle>
+  <path id="factpath" d="M614 386 V 443 H 820" fill="none" stroke="none"/>
+
+  <!-- ================= THE FAN-OUT CALLOUT ================= -->
+  <g transform="translate(16,492)">
+    <rect x="0" y="0" width="580" height="170" rx="12" fill="var(--warn-bg)" stroke="var(--warn-ln)"/>
+    <text class="h3" x="16" y="26" fill="var(--warn)">Where the 10x row explosion comes from</text>
+    <text class="body" x="16" y="50">obt_biz joins employees on <tspan font-family="ui-monospace,Menlo,monospace">o.store_id = e.store_id</tspan>. An order has a store, and</text>
+    <text class="body" x="16" y="68">a store has <tspan font-weight="700">4 to 18 employees</tspan> in the seed data, so every order line is repeated</text>
+    <text class="body" x="16" y="86">once per employee in that store.</text>
+    <text class="body" x="16" y="112" fill="var(--ink)">30 021 order lines &#8594; <tspan font-weight="700">300 513 obt_biz rows</tspan> &#8594; <tspan font-weight="700">300 513 fact_orders rows</tspan></text>
+    <text class="body" x="16" y="136" fill="var(--warn)">Consequence: total_amount and line_amount are duplicated about 10 times.</text>
+    <text class="body" x="16" y="154" fill="var(--warn)">Sum them and revenue inflates by roughly 10x. Aggregate in SQL, not in fact_orders.</text>
+  </g>
+
+  <!-- ================= MATERIALISATION MAP ================= -->
+  <g transform="translate(616,492)">
+    <rect x="0" y="0" width="568" height="170" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="26">Materialisation map</text>
+    <text class="meta" x="18" y="50"><tspan fill="var(--ink)">silver_tech</tspan> is incremental for all six models, configured in</text>
+    <text class="meta" x="18" y="68"><tspan fill="var(--ink)">dbt_project.yml</tspan>, with a unique_key per model so dbt merges.</text>
+    <text class="meta" x="18" y="92"><tspan fill="var(--ink)">silver_biz</tspan> is a table, rebuilt from scratch every run.</text>
+    <text class="meta" x="18" y="110"><tspan fill="var(--ink)">gold/ephemeral</tspan> holds the dashed boxes: never tables, dbt</text>
+    <text class="meta" x="18" y="128">inlines their SQL into whatever reads them.</text>
+    <text class="meta" x="18" y="152"><tspan fill="var(--ink)">macros/custom_schema.sql</tspan> drops dbt's target-schema</text>
+  </g>
+</svg>

@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">End-to-end Walmart data pipeline overview</title>
+  <desc id="dsc">Animated diagram: raw CSV landing in Google Cloud Storage and BigQuery flows into the Databricks bronze schema, then through dbt silver technical models, the silver business obt_biz model, and finally into gold snapshots and a fact table. An Airflow daily DAG drives every stage in sequence.</desc>
+
+  <style>
+    svg {
+      --ink:#0f172a; --mut:#64748b; --faint:#94a3b8;
+      --line:#cbd5e1; --card:#ffffff; --soft:#f8fafc; --band:#f1f5f9;
+      --bronze:#b45309; --bronze-bg:#fffbeb; --bronze-ln:#f59e0b;
+      --silver:#475569; --silver-bg:#f8fafc; --silver-ln:#94a3b8;
+      --gold:#a16207;   --gold-bg:#fefce8;   --gold-ln:#eab308;
+      --air:#0369a1;    --air-bg:#f0f9ff;    --air-ln:#0ea5e9;
+      --ok:#15803d; --bad:#b91c1c;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --ink:#e2e8f0; --mut:#94a3b8; --faint:#64748b;
+        --line:#334155; --card:#0f172a; --soft:#111c2e; --band:#0b1220;
+        --bronze:#fbbf24; --bronze-bg:#1c1408; --bronze-ln:#b45309;
+        --silver:#cbd5e1; --silver-bg:#0f172a; --silver-ln:#475569;
+        --gold:#facc15;   --gold-bg:#1a1608;   --gold-ln:#a16207;
+        --air:#7dd3fc;    --air-bg:#0a1a26;    --air-ln:#0369a1;
+        --ok:#4ade80; --bad:#f87171;
+      }
+    }
+    text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .ttl  { font-size: 25px; font-weight: 700; fill: var(--ink); }
+    .sub  { font-size: 13.5px; fill: var(--mut); }
+    .kick { font-size: 10.5px; font-weight: 700; letter-spacing: 1.3px; fill: var(--mut); }
+    .h2   { font-size: 16px; font-weight: 700; fill: var(--ink); }
+    .h3   { font-size: 13px; font-weight: 700; fill: var(--ink); }
+    .body { font-size: 11.5px; fill: var(--mut); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 10.5px; fill: var(--mut); }
+    .chip-t { font-size: 10.5px; font-weight: 600; fill: var(--ink); }
+    .flow { stroke-dasharray: 5 5; animation: dash 1.1s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -10; } }
+    .packet { animation: fade 0s; }
+    @keyframes softPulse { 0%,100% { opacity:.25; } 50% { opacity:1; } }
+    .pulse { animation: softPulse 2.4s ease-in-out infinite; }
+    .gate { animation: gateBlink 2.4s ease-in-out infinite; }
+    @keyframes gateBlink { 0%,100% { opacity:.45 } 50% { opacity:1 } }
+  </style>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+    </marker>
+    <marker id="arAir" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--air)"/>
+    </marker>
+  </defs>
+
+  <!-- ============ TITLE ============ -->
+  <text class="ttl" x="20" y="42">Walmart retail pipeline — CDC to BI, once a day</text>
+  <text class="sub" x="20" y="65">Airflow 3.3.2 orchestrates · dbt-databricks 1.12 transforms · Databricks Unity Catalog stores · GCS + BigQuery bootstrap the data</text>
+  <g transform="translate(20,78)">
+    <rect x="0" y="0" width="150" height="24" rx="12" fill="var(--air-bg)" stroke="var(--air-ln)"/>
+    <text class="chip-t" x="12" y="16" fill="var(--air)">schedule 0 11 * * *</text>
+    <rect x="160" y="0" width="126" height="24" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="chip-t" x="172" y="16" fill="var(--mut)">America/Sao_Paulo</text>
+    <rect x="296" y="0" width="150" height="24" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="chip-t" x="308" y="16" fill="var(--mut)">catchup = False</text>
+    <rect x="456" y="0" width="128" height="24" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="chip-t" x="468" y="16" fill="var(--mut)">9 tasks, linear</text>
+  </g>
+
+  <!-- ============ DATA FLOW ROW ============ -->
+  <!-- card 1 -->
+  <g>
+    <rect x="20" y="126" width="200" height="152" rx="12" fill="var(--card)" stroke="var(--bronze-ln)" stroke-width="1.5"/>
+    <rect x="20" y="126" width="200" height="4" rx="2" fill="var(--bronze-ln)"/>
+    <text class="kick" x="36" y="152" fill="var(--bronze)">STAGE 0 · BOOTSTRAP</text>
+    <text class="h2" x="36" y="174">Raw landing</text>
+    <text class="body" x="36" y="196">6 CSVs from the repo</text>
+    <text class="body" x="36" y="213">uploaded to</text>
+    <text class="mono" x="36" y="230">gs://walmart-dataset1/raw/</text>
+    <text class="body" x="36" y="250">loaded into BigQuery</text>
+    <text class="mono" x="36" y="266">walmart_db.*</text>
+  </g>
+
+  <!-- card 2 -->
+  <g>
+    <rect x="262" y="126" width="200" height="152" rx="12" fill="var(--card)" stroke="var(--bronze-ln)" stroke-width="1.5"/>
+    <rect x="262" y="126" width="200" height="4" rx="2" fill="var(--bronze-ln)"/>
+    <text class="kick" x="278" y="152" fill="var(--bronze)">STAGE 1 · BRONZE</text>
+    <text class="h2" x="278" y="174">Landing tables</text>
+    <text class="body" x="278" y="196">Databricks job pulls CDC</text>
+    <text class="mono" x="278" y="213">job 722339675985031</text>
+    <text class="body" x="278" y="233">deferrable operator, so</text>
+    <text class="body" x="278" y="250">no worker slot is held</text>
+    <text class="mono" x="278" y="266">walmart.bronze.*</text>
+  </g>
+
+  <!-- card 3 -->
+  <g>
+    <rect x="504" y="126" width="200" height="152" rx="12" fill="var(--card)" stroke="var(--silver-ln)" stroke-width="1.5"/>
+    <rect x="504" y="126" width="200" height="4" rx="2" fill="var(--silver-ln)"/>
+    <text class="kick" x="520" y="152" fill="var(--silver)">STAGE 2 · SILVER TECH</text>
+    <text class="h2" x="520" y="174">6 incremental models</text>
+    <text class="body" x="520" y="196">pass-through + audit col</text>
+    <text class="mono" x="520" y="213">processed_at = now()</text>
+    <text class="body" x="520" y="233">watermark on</text>
+    <text class="mono" x="520" y="250">updated_timestamp</text>
+    <text class="body" x="520" y="266">merge on natural key</text>
+  </g>
+
+  <!-- card 4 -->
+  <g>
+    <rect x="746" y="126" width="200" height="152" rx="12" fill="var(--card)" stroke="var(--silver-ln)" stroke-width="1.5"/>
+    <rect x="746" y="126" width="200" height="4" rx="2" fill="var(--silver-ln)"/>
+    <text class="kick" x="762" y="152" fill="var(--silver)">STAGE 3 · SILVER BIZ</text>
+    <text class="h2" x="762" y="174">obt_biz</text>
+    <text class="body" x="762" y="196">one wide business table</text>
+    <text class="body" x="762" y="213">Jinja list of 6 configs</text>
+    <text class="body" x="762" y="230">generates the joins</text>
+    <text class="body" x="762" y="250">orders x items x customer</text>
+    <text class="body" x="762" y="266">x product x store x staff</text>
+  </g>
+
+  <!-- card 5 -->
+  <g>
+    <rect x="988" y="126" width="192" height="152" rx="12" fill="var(--card)" stroke="var(--gold-ln)" stroke-width="1.5"/>
+    <rect x="988" y="126" width="192" height="4" rx="2" fill="var(--gold-ln)"/>
+    <text class="kick" x="1004" y="152" fill="var(--gold)">STAGE 4 · GOLD</text>
+    <text class="h2" x="1004" y="174">Dimensions + fact</text>
+    <text class="body" x="1004" y="196">5 SCD2 snapshots</text>
+    <text class="mono" x="1004" y="213">dim_customers ... dim_orders</text>
+    <text class="body" x="1004" y="233">1 star fact table</text>
+    <text class="mono" x="1004" y="250">fact_orders</text>
+    <text class="body" x="1004" y="266">no incremental build yet</text>
+  </g>
+
+  <!-- connectors between cards -->
+  <g stroke="var(--line)" stroke-width="2" fill="none" marker-end="url(#ar)">
+    <path d="M224 202 H 256"/>
+    <path d="M466 202 H 498"/>
+    <path d="M708 202 H 740"/>
+    <path d="M950 202 H 982"/>
+  </g>
+  <g fill="var(--air)">
+    <circle cx="224" cy="202" r="3.5"><animate attributeName="cx" values="226;254" dur="1.6s" repeatCount="indefinite"/></circle>
+    <circle cx="466" cy="202" r="3.5"><animate attributeName="cx" values="468;496" dur="1.6s" begin="0.25s" repeatCount="indefinite"/></circle>
+    <circle cx="708" cy="202" r="3.5"><animate attributeName="cx" values="710;738" dur="1.6s" begin="0.5s" repeatCount="indefinite"/></circle>
+    <circle cx="950" cy="202" r="3.5"><animate attributeName="cx" values="952;980" dur="1.6s" begin="0.75s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- ============ AIRFLOW SPINE ============ -->
+  <rect x="20" y="316" width="1160" height="150" rx="14" fill="var(--band)" stroke="var(--air-ln)" stroke-dasharray="4 4"/>
+  <text class="kick" x="36" y="342" fill="var(--air)">AIRFLOW DAG · orchestrate_improved · 9 TASKS, FULLY SEQUENTIAL</text>
+
+  <g id="chain">
+    <!-- rail -->
+    <line x1="34" y1="404" x2="1166" y2="404" stroke="var(--air-ln)" stroke-width="2" opacity="0.45"/>
+    <circle r="4" fill="var(--air)">
+      <animateMotion dur="11s" repeatCount="indefinite">
+        <mpath xlink:href="#rail" href="#rail"/>
+      </animateMotion>
+    </circle>
+    <path id="rail" d="M34 404 H 1166" fill="none" stroke="none"/>
+
+    <!-- chips -->
+    <g>
+      <rect x="34"  y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="#FF3621"/>
+      <text class="mono" x="42" y="374" fill="#FF3621">ingest_cdc</text>
+      <text class="mono" x="42" y="387">databricks job</text>
+    </g>
+    <g>
+      <rect x="164" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="var(--line)"/>
+      <text class="mono" x="172" y="374">source</text>
+      <text class="mono" x="172" y="387">freshness</text>
+    </g>
+    <g>
+      <rect x="294" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="#FF6947"/>
+      <text class="mono" x="302" y="374" fill="#FF6947">run</text>
+      <text class="mono" x="302" y="387">silver_tech</text>
+    </g>
+    <g>
+      <rect x="424" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="var(--ok)"/>
+      <text class="mono" x="432" y="374" fill="var(--ok)">test</text>
+      <text class="mono" x="432" y="387">silver_tech</text>
+    </g>
+    <g>
+      <rect x="554" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="#FF6947"/>
+      <text class="mono" x="562" y="374" fill="#FF6947">run</text>
+      <text class="mono" x="562" y="387">silver_biz</text>
+    </g>
+    <g>
+      <rect x="684" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="var(--ok)"/>
+      <text class="mono" x="692" y="374" fill="var(--ok)">test</text>
+      <text class="mono" x="692" y="387">silver_biz</text>
+    </g>
+    <g>
+      <rect x="814" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="var(--line)"/>
+      <text class="mono" x="822" y="374">run gold</text>
+      <text class="mono" x="822" y="387">ephemeral</text>
+    </g>
+    <g>
+      <rect x="944" y="360" width="118" height="34" rx="8" fill="var(--card)" stroke="#FF6947"/>
+      <text class="mono" x="952" y="374" fill="#FF6947">dbt snapshot</text>
+      <text class="mono" x="952" y="387">5 dims</text>
+    </g>
+    <g>
+      <rect x="1074" y="360" width="92" height="34" rx="8" fill="var(--card)" stroke="#FF6947"/>
+      <text class="mono" x="1082" y="374" fill="#FF6947">run gold</text>
+      <text class="mono" x="1082" y="387">fact</text>
+    </g>
+
+    <!-- rail tick labels -->
+    <g class="mono" text-anchor="middle">
+      <text x="93"  y="424">deferrable</text>
+      <text x="223" y="424">gate</text>
+      <text x="353" y="424">6 models</text>
+      <text x="483" y="424">unique / not_null</text>
+      <text x="613" y="424">obt_biz</text>
+      <text x="743" y="424">null-key check</text>
+      <text x="873" y="424">inlined only</text>
+      <text x="1003" y="424">SCD2 type 2</text>
+      <text x="1120" y="424">300k rows</text>
+    </g>
+    <g class="mono" text-anchor="middle" opacity="0.75">
+      <text x="93"  y="440" fill="var(--faint)">0 11 * * *</text>
+      <text x="1120" y="440" fill="var(--faint)">target schema: gold</text>
+    </g>
+  </g>
+
+  <!-- ============ LEGEND + NOTES ============ -->
+  <g transform="translate(20,494)">
+    <text class="kick" x="0" y="0">LAYERING</text>
+    <g transform="translate(0,14)">
+      <rect x="0" y="0" width="14" height="14" rx="4" fill="var(--bronze-ln)"/><text class="body" x="22" y="12">bronze / raw</text>
+      <rect x="120" y="0" width="14" height="14" rx="4" fill="var(--silver-ln)"/><text class="body" x="142" y="12">silver, tech and biz</text>
+      <rect x="290" y="0" width="14" height="14" rx="4" fill="var(--gold-ln)"/><text class="body" x="312" y="12">gold, consumption ready</text>
+      <rect x="470" y="0" width="14" height="14" rx="4" fill="#0ea5e9"/><text class="body" x="492" y="12">Airflow control flow</text>
+      <rect x="620" y="0" width="14" height="14" rx="4" fill="#FF6947"/><text class="body" x="642" y="12">dbt command</text>
+      <rect x="750" y="0" width="14" height="14" rx="4" fill="#15803d"/><text class="body" x="772" y="12">dbt test gate</text>
+      <rect x="890" y="0" width="14" height="14" rx="4" fill="#FF3621"/><text class="body" x="912" y="12">Databricks</text>
+    </g>
+  </g>
+
+  <g transform="translate(20,540)">
+    <rect x="0" y="0" width="1160" height="90" rx="12" fill="var(--soft)" stroke="var(--line)"/>
+    <text class="h3" x="18" y="24">How to read this</text>
+    <text class="body" x="18" y="44">Stage 0 runs once, by hand. Stages 1 to 4 run every day at 11:00, and each layer only starts once the previous layer passed its tests, so a</text>
+    <text class="body" x="18" y="60">bad bronze table stops the run instead of quietly poisoning gold.</text>
+    <text class="mono" x="18" y="78">repo layout:  dags/ (Airflow)   ·   walmart/ (dbt project)   ·   include/walmart_dataset/data/ (seed CSVs)</text>
+  </g>
+</svg>
