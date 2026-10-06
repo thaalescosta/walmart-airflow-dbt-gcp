@@ -9,7 +9,9 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "apache-airflow==3.3.2",
+    "apache-airflow-providers-databricks==7.21.0",
     "apache-airflow-providers-google>=22.1.0",
+    "databricks-sdk>=0.117.0",
     "dbt-core>=1.12.5",
     "dbt-databricks>=1.12.6",
     "google-cloud-storage>=3.16.0",

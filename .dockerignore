@@ -6,3 +6,12 @@ logs/
 .venv
 airflow.db
 airflow.cfg
+
+# dbt build artifacts must never be baked into the Linux image.
+# walmart/target/partial_parse.msgpack is written by whichever OS runs dbt last
+# and stores file ids built from OS-native path separators
+# (walmart://macros\custom_schema.sql on Windows). A cache baked in from the
+# Windows host makes the in-container Linux dbt raise
+# KeyError: 'walmart://macros/custom_schema.sql' in load_and_parse_macros.
+walmart/target/
+walmart/logs/
